@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="pt-br" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus Command Center · Tarefas Sentinela & Objetivos da Semana · Festblend Cuiabá 360</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/theme.css">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/d1_client.js"></script>
+
+  <style>
+    /* Universal Custom Luxury Scrollbar */
+    * {
+      scrollbar-width: thin !important;
+      scrollbar-color: #c5a059 #08080a !important;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif !important;
+    }
+    ::-webkit-scrollbar { width: 6px !important; height: 6px !important; }
+    ::-webkit-scrollbar-track { background: #08080a !important; }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #f1e3ad 0%, #c5a059 50%, #997836 100%) !important;
+      border-radius: 10px !important;
+      border: 1px solid #08080a !important;
+    }
+
+    body {
+      background: var(--bg-deep);
+      color: var(--text-main);
+      padding: 16px 20px 60px 20px;
+      min-height: 100vh;
+      overflow-y: auto;
+    }
+
+    /* Header Panel */
+    .header-panel {
+      background: linear-gradient(135deg, rgba(18, 18, 24, 0.95) 0%, rgba(12, 12, 16, 0.95) 100%);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.5rem;
+      backdrop-filter: blur(12px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    .header-title-wrap h1 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-title-wrap h1 span {
+      color: var(--gold-primary);
+    }
+
+    .header-title-wrap p {
+      font-size: 0.8rem;
+      color: var(--text-sub);
+      margin-top: 4px;
+    }
+
+    .stats-container {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .stat-card {
+      background: rgba(8, 10, 15, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 0.65rem 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .stat-card.danger { border-color: rgba(239, 68, 68, 0.35); }
+    .stat-card.warning { border-color: rgba(197, 160, 89, 0.35); }
+    .stat-card.semana { border-color: rgba(56, 189, 248, 0.35); }
+    .stat-card.success { border-color: rgba(16, 185, 129, 0.35); }
+
+    .stat-number {
+      font-size: 1.35rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .stat-card.danger .stat-number { color: var(--red); }
+    .stat-card.warning .stat-number { color: var(--gold-primary); }
+    .stat-card.semana .stat-number { color: var(--blue); }
+    .stat-card.success .stat-number { color: var(--green); }
+
+    .stat-label {
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: -0.2px;
+      color: var(--text-sub);
+    }
+
+    /* Controls & Filter Bar */
+    .controls-bar {
+      background: var(--bg-surface);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 0.85rem 1.2rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .filters-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-sub);
+      padding: 0.5rem 0.95rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.78rem;
+      font-weight: 700;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .filter-btn:hover {
+      color: var(--text-main);
+      border-color: var(--gold-primary);
+      background: rgba(197, 160, 89, 0.08);
+    }
+
+    .filter-btn.active {
+      background: linear-gradient(90deg, rgba(197, 160, 89, 0.25) 0%, rgba(197, 160, 89, 0.05) 100%);
+      color: var(--gold-primary);
+      border-color: var(--gold-primary);
+      font-weight: 800;
+      box-shadow: 0 2px 10px var(--gold-glow);
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-deep);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 0.45rem 0.85rem;
+      min-width: 220px;
+    }
+
+    .search-box input {
+      background: transparent;
+      border: none;
+      color: var(--text-main);
+      font-size: 0.8rem;
+      outline: none;
+      width: 100%;
+    }
+
+    /* Section Headers */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 2rem 0 1rem 0;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: -0.2px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-badge {
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    .section-header.semana .section-title { color: var(--blue); }
+    .section-header.semana .section-badge {
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--blue);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    .section-header.sentinela .section-title { color: var(--gold-primary); }
+    .section-header.sentinela .section-badge {
+      background: rgba(197, 160, 89, 0.15);
+      color: var(--gold-primary);
+      border: 1px solid rgba(197, 160, 89, 0.3);
+    }
+
+    /* Tasks Grid */
+    .tasks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .task-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .task-card:hover {
+      border-color: var(--gold-primary);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    .task-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--card-border);
+    }
+
+    .task-card.danger::before { background: var(--red); }
+    .task-card.warning::before { background: var(--gold-primary); }
+    .task-card.semana::before { background: var(--blue); }
+    .task-card.completed::before { background: var(--green); }
+
+    .task-card.completed {
+      opacity: 0.6;
+    }
+
+    .task-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.8rem;
+    }
+
+    .task-badge-cat {
+      font-size: 0.66rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(197, 160, 89, 0.12);
+      color: var(--gold-primary);
+      border: 1px solid rgba(197, 160, 89, 0.25);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .task-badge-priority {
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+
+    .task-badge-priority.urgente {
+      background: rgba(239, 68, 68, 0.2);
+      color: var(--red);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+    }
+
+    .task-badge-priority.alta {
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--yellow);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+    }
+
+    .task-badge-priority.estrategica {
+      background: rgba(56, 189, 248, 0.2);
+      color: var(--blue);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+    }
+
+    .task-title {
+      font-size: 0.98rem;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.35;
+      margin-bottom: 0.5rem;
+    }
+
+    .task-desc {
+      font-size: 0.78rem;
+      color: var(--text-sub);
+      line-height: 1.45;
+      margin-bottom: 0.9rem;
+    }
+
+    .task-how-to {
+      background: rgba(0, 0, 0, 0.35);
+      border-left: 2px solid var(--gold-primary);
+      border-radius: 6px;
+      padding: 8px 12px;
+      margin-bottom: 1rem;
+      font-size: 0.74rem;
+      color: var(--gold-light);
+      line-height: 1.4;
+    }
+
+    .task-how-to strong {
+      color: #ffffff;
+      display: block;
+      margin-bottom: 2px;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .task-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 0.8rem;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .task-assignee {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--gold-light);
+      font-weight: 700;
+    }
+
+    .task-btn-toggle {
+      background: transparent;
+      border: 1px solid var(--card-border);
+      color: var(--gold-primary);
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+
+    .task-btn-toggle:hover {
+      background: var(--gold-gradient);
+      color: #08080a;
+      border-color: transparent;
+    }
+
+    .task-btn-toggle.done {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: var(--green);
+    }
+
+    @media (max-width: 900px) {
+      .tasks-grid { grid-template-columns: 1fr; }
+      .header-panel { flex-direction: column; align-items: stretch; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header Superior -->
+  <header class="header-panel">
+    <div class="header-title-wrap">
+      <h1><i data-lucide="check-square" style="color: var(--gold-primary);"></i> Nexus Command Center <span>· Festblend 360</span></h1>
+      <p>Gestão Inteligente de Demandas, Modo Sentinela Passivo & Objetivos da Semana</p>
+    </div>
+
+    <div class="stats-container">
+      <div class="stat-card danger" onclick="filterByPriority('urgente')">
+        <div class="stat-number" id="count-danger">2</div>
+        <div>
+          <div class="stat-label">Em Risco Crítico</div>
+          <span style="font-size: 0.65rem; color: var(--text-muted);">Ação Imediata</span>
+        </div>
+      </div>
+
+      <div class="stat-card warning" onclick="filterByPriority('alta')">
+        <div class="stat-number" id="count-warning">3</div>
+        <div>
+          <div class="stat-label">Urgentes Hoje</div>
+          <span style="font-size: 0.65rem; color: var(--text-muted);">Degustações & Cotação</span>
+        </div>
+      </div>
+
+      <div class="stat-card semana" onclick="filterByCategory('semana')">
+        <div class="stat-number" id="count-semana">4</div>
+        <div>
+          <div class="stat-label">Objetivos da Semana</div>
+          <span style="font-size: 0.65rem; color: var(--text-muted);">Metas Festblend</span>
+        </div>
+      </div>
+
+      <div class="stat-card success" onclick="filterByDone()">
+        <div class="stat-number" id="count-success">5</div>
+        <div>
+          <div class="stat-label">Concluídas</div>
+          <span style="font-size: 0.65rem; color: var(--text-muted);">Auditadas no D1</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Barra de Filtros e Busca -->
+  <section class="controls-bar">
+    <div class="filters-group">
+      <button class="filter-btn active" id="btn-filter-all" onclick="setFilter('all', this)">
+        <i data-lucide="layers" style="width: 14px; height: 14px;"></i> Todas as Tarefas
+      </button>
+      <button class="filter-btn" onclick="setFilter('semana', this)">
+        <i data-lucide="target" style="width: 14px; height: 14px;"></i> Objetivos da Semana
+      </button>
+      <button class="filter-btn" onclick="setFilter('sentinela', this)">
+        <i data-lucide="bot" style="width: 14px; height: 14px;"></i> Modo Sentinela WhatsApp
+      </button>
+      <button class="filter-btn" onclick="setFilter('eduardo', this)">
+        <i data-lucide="user" style="width: 14px; height: 14px;"></i> Eduardo Almeida
+      </button>
+      <button class="filter-btn" onclick="setFilter('larissa', this)">
+        <i data-lucide="user" style="width: 14px; height: 14px;"></i> Larissa Noivas
+      </button>
+      <button class="filter-btn" onclick="setFilter('matheus', this)">
+        <i data-lucide="user" style="width: 14px; height: 14px;"></i> Matheus Corporativo
+      </button>
+    </div>
+
+    <div class="search-box">
+      <i data-lucide="search" style="width: 14px; height: 14px; color: var(--text-muted);"></i>
+      <input type="text" id="taskSearchInput" placeholder="Buscar por cliente, buffet ou tarefa..." onkeyup="filterTasksBySearch()">
+    </div>
+  </section>
+
+  <!-- SEÇÃO 1: OBJETIVOS ESTRATÉGICOS DA SEMANA -->
+  <div class="section-header semana" id="header-semana">
+    <div class="section-title">
+      <i data-lucide="target" style="width: 18px; height: 18px;"></i> Objetivos Estratégicos da Semana · Metas Festblend
+    </div>
+    <span class="section-badge">Alta Temporada 2026</span>
+  </div>
+
+  <div class="tasks-grid" id="grid-semana">
+
+    <!-- Meta 1: Faturamento -->
+    <div class="task-card semana" data-cat="semana" data-assignee="eduardo">
+      <div class="task-top">
+        <span class="task-badge-cat">Meta Comercial</span>
+        <span class="task-badge-priority estrategica">Estratégica</span>
+      </div>
+      <h3 class="task-title">Fechar R$ 45.000,00 em Contratos de Alta Temporada</h3>
+      <p class="task-desc">Concentrar esforços nos eventos de novembro e dezembro, priorizando confraternizações corporativas e casamentos com entrada mínima de 30% via PIX.</p>
+      <div class="task-how-to">
+        <strong>Como Executar Passo a Passo:</strong>
+        1. Revisar propostas abertas acima de R$ 10.000,00. 2. Oferecer degustação de drinks sem custo para fechamento nesta semana. 3. Bloquear datas assim que o sinal compensar.
+      </div>
+      <div class="task-footer">
+        <div class="task-assignee"><i data-lucide="user" style="width: 13px; height: 13px;"></i> Eduardo Almeida (Diretoria)</div>
+        <button class="task-btn-toggle" onclick="toggleTask(this)">
+          <i data-lucide="circle" style="width: 13px; height: 13px;"></i> Em Andamento
+        </button>
+      </div>
+    </div>
+
+    <!-- Meta 2: Data em Risco Beatriz & Lucas -->
+    <div class="task-card danger" data-cat="semana" data-assignee="larissa">
+      <div class="task-top">
+        <span class="task-badge-cat">Trava de Escassez</span>
+        <span class="task-badge-priority urgente">Urgente</span>
+      </div>
+      <h3 class="task-title">Travar Sinal do Casamento Beatriz & Lucas (24/10)</h3>
+      <p class="task-desc">Sábado nobre de outubro no Espaço Ágora Cuiabá sem sinal pago há 4 dias. Existe outra noiva aguardando a liberação desta exata data.</p>
+      <div class="task-how-to">
+        <strong>Como Executar Passo a Passo:</strong>
+        1. Mandar mensagem via WhatsApp avisando sobre a segunda noiva na fila. 2. Estabelecer prazo improrrogável até sexta às 18h. 3. Caso não pague o sinal de R$ 3.000,00, liberar a agenda.
+      </div>
+      <div class="task-footer">
+        <div class="task-assignee"><i data-lucide="user" style="width: 13px; height: 13px;"></i> Larissa Vasconcelos</div>
+        <button class="task-btn-toggle" onclick="toggleTask(this)">
+          <i data-lucide="circle" style="width: 13px; height: 13px;"></i> Em Andamento
+        </button>
+      </div>
+    </div>
+
+    <!-- Meta 3: Degustações Presenciais -->
+    <div class="task-card semana" data-cat="semana" data-assignee="matheus">
+      <div class="task-top">
+        <span class="task-badge-cat">Experiência & Fechamento</span>
+        <span class="task-badge-priority alta">Alta</span>
+      </div>
+      <h3 class="task-title">Realizar 3 Degustações Presenciais na Sede da Festblend</h3>
+      <p class="task-desc">Receber os contratantes para prova ao vivo de coquetéis artesanais, apresentação das taças de cristal e demonstração da barra móvel iluminada.</p>
+      <div class="task-how-to">
+        <strong>Como Executar Passo a Passo:</strong>
+        1. Agendar horários na terça e quinta. 2. Separar insumos nobres (Gin artesanal, xaropes especiais e frutas da estação). 3. Entregar minuta de contrato impressa na mesa.
+      </div>
+      <div class="task-footer">
+        <div class="task-assignee"><i data-lucide="user" style="width: 13px; height: 13px;"></i> Matheus & Equipe Bar</div>
+        <button class="task-btn-toggle" onclick="toggleTask(this)">
+          <i data-lucide="circle" style="width: 13px; height: 13px;"></i> Em Andamento
+        </button>
+      </div>
+    </div>
+
+    <!-- Meta 4: Agronegócio Mato Grosso -->
+    <div class="task-card semana" data-cat="semana" data-assignee="eduardo">
+      <div class="task-top">
+        <span class="task-badge-cat">Prospecção B2B</span>
+        <span class="task-badge-priority estrategica">Estratégica</span>
+      </div>
+      <h3 class="task-title">Disparar Propostas para 5 Grupos do Agro de Cuiabá</h3>
+      <p class="task-desc">Apresentar a estrutura 360 com Chopp Artesanal e Bar de Caipirinhas Premium para as maiores empresas do setor antes que fechem com fornecedores concorrentes.</p>
+      <div class="task-how-to">
+        <strong>Como Executar Passo a Passo:</strong>
+        1. Levantar contatos de diretorias e marketing das tradings. 2. Enviar PDF executivo e vídeo institucional da Festblend. 3. Marcar reunião presencial com Eduardo Almeida.
+      </div>
+      <div class="task-footer">
+        <div class="task-assignee"><i data-lucide="user" style="width: 13px; height: 13px;"></i> Eduardo Almeida (Diretoria)</div>
+        <button class="task-btn-toggle" onclick="toggleTask(this)">
+          <i data-lucide="circle" style="width: 13px; height: 13px;"></i> Em Andamento
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SEÇÃO 2: TAREFAS ANOTADAS NO MODO SENTINELA (WHATSAPP INTELIGENTE) -->
+  <div class="section-header sentinela" id="header-sentinela">
+    <div class="section-title">
+      <i data-lucide="bot" style="width: 18px; height: 18px;"></i> Demandas Extraídas no Modo Sentinela · WhatsApp Evolution
+    </div>
+    <span class="section-badge">Inteligência Passiva D1</span>
+  </div>
+
+  <div class="tasks-grid" id="grid-sentinela">
+
+    <!-- Sentinela 1: Amanda Silveira -->
+    <div class="task-card warning" data-cat="sentinela" data-assignee="larissa">
+      <div class="task-top">
+        <span class="task-badge-cat">Sentinela · Proposta</span>
+        <span class="task-badge-priority urgente">Urgente</span>
+      </div>
+      <h3 class="task-title">Cotação de Bar 360 Full para Amanda Silveira · Leila Malouf</h3>
+      <p class="task-desc">Noiva solicitou inclusão de Chopp Louvada e carta exclusiva de Moscow Mule na recepção do casamento com 250 convidados para 14/11/2026.</p>
+      <div class="task-how-to">
+        <strong>Como Executar Passo a Passo:</strong>
+        1. Confirmar número de convidados (250 pessoas). 2. Incluir 4 bartenders e 2 baristas de apoio. 3. Enviar proposta formalizada de R$ 14.800,00 com entrada de R$ 3.000,00.
+      </div>
+      <div class="task-footer">
+        <div class="task-assignee"><i data-lucide="user" style="width: 13px; height: 13px;"></i> Larissa Vasconcelos</div>
+        <button class="task-btn-toggle" onclick="toggleTask(this)">
+          <i data-lucide="circle" style="width: 13px; height: 13px;"></i> Em Andamento
+        </button>
+      </div>
+    </div>
+
+    <!-- Sentinela 2: Dr. Roberto Mendes -->
+    <div class="task-card warning" data-cat="sentinela" data-assignee="eduardo">
+      <div class="task-top">
+        <span class="task-badge-cat">Sentinela · Financeiro</span>
+        <span class="task-badge-priority alta">Alta</span>
+      </div>
+      <h3 class="task-title">Emissão de Recibo & Trava de Data AgroCerrado 2026</h3>
+      <p class="task-desc">Cliente efetuou pagamento do sinal de R$ 10.000,00 via PIX para o evento de 19/12 no Cenarium Rural. Necessário emitir recibo e travar a equipe de montagem.</p>
+      <div class="task-how-to">
+        <strong>Como Executar Passo a Passo:</strong>
+        1. Conferir entrada no extrato bancário PJ. 2. Gerar recibo assinado em PDF. 3. Marcar data como Contrato Fechado na agenda e notificar os fornecedores de gelo e chopp.
+      </div>
+      <div class="task-footer">
+        <div class="task-assignee"><i data-lucide="user" style="width: 13px; height: 13px;"></i> Eduardo Almeida</div>
+        <button class="task-btn-toggle done" onclick="toggleTask(this)">
+          <i data-lucide="check-circle" style="width: 13px; height: 13px;"></i> Concluída
+        </button>
+      </div>
+    </div>
+
+    <!-- Sentinela 3: Debutante Isabella -->
+    <div class="task-card warning" data-cat="sentinela" data-assignee="matheus">
+      <div class="task-top">
+        <span class="task-badge-cat">Sentinela · Degustação</span>
+        <span class="task-badge-priority alta">Alta</span>
+      </div>
+      <h3 class="task-title">Agendamento de Degustação para Pais da Debutante Isabella</h3>
+      <p class="task-desc">Mãe Patrícia Guimarães enviou mensagem querendo provar os Mocktails sem álcool para os 180 adolescentes do evento em 05/12 na Villa Felici.</p>
+      <div class="task-how-to">
+        <strong>Como Executar Passo a Passo:</strong>
+        1. Enviar opções de terça às 18h30 ou quinta às 19h00. 2. Deixar preparado cardápio com soda italiana, xarope de frutas vermelhas e espumas artesanais.
+      </div>
+      <div class="task-footer">
+        <div class="task-assignee"><i data-lucide="user" style="width: 13px; height: 13px;"></i> Matheus Peixoto</div>
+        <button class="task-btn-toggle" onclick="toggleTask(this)">
+          <i data-lucide="circle" style="width: 13px; height: 13px;"></i> Em Andamento
+        </button>
+      </div>
+    </div>
+
+    <!-- Sentinela 4: Cerimonialista Izis Dorileo -->
+    <div class="task-card warning" data-cat="sentinela" data-assignee="larissa">
+      <div class="task-top">
+        <span class="task-badge-cat">Sentinela · Parceria</span>
+        <span class="task-badge-priority alta">Alta</span>
+      </div>
+      <h3 class="task-title">Alinhamento Técnico com Cerimonialista Izis Dorileo</h3>
+      <p class="task-desc">Cerimonial solicitou dimensões da barra 360 e exigência de pontos de energia para chopeiras no projeto de decoração do casamento Camila Diniz.</p>
+      <div class="task-how-to">
+        <strong>Como Executar Passo a Passo:</strong>
+        1. Encaminhar planta baixa em PDF da estrutura 360. 2. Especificar necessidade de 2 tomadas de 20A dedicadas para o motor de refrigeração.
+      </div>
+      <div class="task-footer">
+        <div class="task-assignee"><i data-lucide="user" style="width: 13px; height: 13px;"></i> Larissa Vasconcelos</div>
+        <button class="task-btn-toggle" onclick="toggleTask(this)">
+          <i data-lucide="circle" style="width: 13px; height: 13px;"></i> Em Andamento
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function toggleTask(btn) {
+      const card = btn.closest('.task-card');
+      if (btn.classList.contains('done')) {
+        btn.classList.remove('done');
+        btn.innerHTML = '<i data-lucide="circle" style="width: 13px; height: 13px;"></i> Em Andamento';
+        card.classList.remove('completed');
+      } else {
+        btn.classList.add('done');
+        btn.innerHTML = '<i data-lucide="check-circle" style="width: 13px; height: 13px;"></i> Concluída';
+        card.classList.add('completed');
+      }
+      lucide.createIcons();
+      updateCounts();
+    }
+
+    function updateCounts() {
+      const completed = document.querySelectorAll('.task-btn-toggle.done').length;
+      document.getElementById('count-success').textContent = completed;
+    }
+
+    function setFilter(type, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+
+      const allCards = document.querySelectorAll('.task-card');
+      const headerSemana = document.getElementById('header-semana');
+      const headerSentinela = document.getElementById('header-sentinela');
+
+      if (type === 'all') {
+        allCards.forEach(c => c.style.display = 'flex');
+        headerSemana.style.display = 'flex';
+        headerSentinela.style.display = 'flex';
+      } else if (type === 'semana') {
+        allCards.forEach(c => {
+          c.style.display = c.dataset.cat === 'semana' ? 'flex' : 'none';
+        });
+        headerSemana.style.display = 'flex';
+        headerSentinela.style.display = 'none';
+      } else if (type === 'sentinela') {
+        allCards.forEach(c => {
+          c.style.display = c.dataset.cat === 'sentinela' ? 'flex' : 'none';
+        });
+        headerSemana.style.display = 'none';
+        headerSentinela.style.display = 'flex';
+      } else {
+        allCards.forEach(c => {
+          c.style.display = c.dataset.assignee === type ? 'flex' : 'none';
+        });
+        headerSemana.style.display = 'flex';
+        headerSentinela.style.display = 'flex';
+      }
+    }
+
+    function filterByPriority(pri) {
+      const allCards = document.querySelectorAll('.task-card');
+      allCards.forEach(c => {
+        if (pri === 'urgente') {
+          c.style.display = c.classList.contains('danger') ? 'flex' : 'none';
+        } else if (pri === 'alta') {
+          c.style.display = c.classList.contains('warning') ? 'flex' : 'none';
+        }
+      });
+    }
+
+    function filterByCategory(cat) {
+      setFilter(cat, null);
+    }
+
+    function filterByDone() {
+      const allCards = document.querySelectorAll('.task-card');
+      allCards.forEach(c => {
+        c.style.display = c.classList.contains('completed') ? 'flex' : 'none';
+      });
+    }
+
+    function filterTasksBySearch() {
+      const term = document.getElementById('taskSearchInput').value.toLowerCase();
+      const allCards = document.querySelectorAll('.task-card');
+      allCards.forEach(c => {
+        const text = c.textContent.toLowerCase();
+        c.style.display = text.includes(term) ? 'flex' : 'none';
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      updateCounts();
+    });
+  </script>
+</body>
+</html>
