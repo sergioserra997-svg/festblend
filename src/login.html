@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-br" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Festblend Cuiabá 360 · Console de Autenticação Executiva</title>
+  <meta name="description" content="Autenticação Privativa · Festblend Bar para Eventos & Coquetelaria">
+
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/theme.css">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="js/auth.js"></script>
+
+  <style>
+    body.auth-body {
+      background: radial-gradient(circle at 50% 35%, rgba(197, 160, 89, 0.12) 0%, rgba(16, 16, 20, 0.98) 55%, #08080a 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 440px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 40px 32px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px var(--gold-glow);
+      backdrop-filter: blur(12px);
+      text-align: center;
+      position: relative;
+    }
+
+    .brand-crest {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      background: var(--gold-subtle);
+      border: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px auto;
+      color: var(--gold-light);
+    }
+
+    .brand-title {
+      font-family: var(--font-serif);
+      font-size: 1.75rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      background: var(--gold-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+
+    .brand-subtitle {
+      font-size: 0.82rem;
+      color: var(--text-sub);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 600;
+      margin-bottom: 28px;
+    }
+
+    .form-group {
+      text-align: left;
+      margin-bottom: 18px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--gold-light);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 8px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      background: #0a0a0e;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      transition: var(--transition-smooth);
+      outline: none;
+    }
+
+    .form-input:focus {
+      border-color: var(--gold-primary);
+      box-shadow: 0 0 15px var(--gold-glow);
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: var(--gold-gradient);
+      border: none;
+      border-radius: 10px;
+      color: #08080a;
+      font-weight: 800;
+      font-size: 0.92rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: var(--transition-smooth);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn-submit:hover {
+      box-shadow: 0 8px 25px var(--gold-glow);
+      transform: translateY(-2px);
+    }
+
+    .quick-logins-title {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      margin: 28px 0 14px 0;
+      position: relative;
+    }
+
+    .quick-logins-title::before, .quick-logins-title::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 25%;
+      height: 1px;
+      background: rgba(197, 160, 89, 0.15);
+    }
+    .quick-logins-title::before { left: 0; }
+    .quick-logins-title::after { right: 0; }
+
+    .quick-cards-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .quick-user-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      background: #0d0d12;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      cursor: pointer;
+      text-align: left;
+      transition: var(--transition-smooth);
+    }
+
+    .quick-user-card:hover {
+      border-color: var(--gold-primary);
+      background: var(--gold-subtle);
+      transform: translateX(3px);
+    }
+
+    .quick-user-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid var(--card-border);
+    }
+
+    .quick-user-info {
+      flex: 1;
+    }
+
+    .quick-user-name {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .quick-user-role {
+      font-size: 0.7rem;
+      color: var(--gold-primary);
+    }
+
+    .role-badge-admin {
+      background: var(--gold-subtle);
+      color: var(--gold-light);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.65rem;
+      font-weight: 800;
+    }
+  </style>
+</head>
+<body class="auth-body">
+
+  <div class="auth-card">
+    <div class="brand-crest">
+      <i data-lucide="wine" style="width: 30px; height: 30px;"></i>
+    </div>
+
+    <h1 class="brand-title">Festblend Cuiabá</h1>
+    <p class="brand-subtitle">Console Executivo · Bar para Eventos 360°</p>
+
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label class="form-label" for="email">E-mail Corporativo</label>
+        <input type="email" id="email" class="form-input" placeholder="seu.nome@festblend.com.br" required value="eduardo@festblend.com.br">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="password">Senha de Segurança</label>
+        <input type="password" id="password" class="form-input" placeholder="••••••••" required value="festblend2026">
+      </div>
+
+      <button type="submit" class="btn-submit">
+        <i data-lucide="lock" style="width: 16px; height: 16px;"></i>
+        Acessar Painel 360°
+      </button>
+    </form>
+
+    <div class="quick-logins-title">Acesso Rápido por Perfil</div>
+
+    <div class="quick-cards-grid">
+      <!-- Eduardo Master -->
+      <div class="quick-user-card" onclick="quickLogin('eduardo@festblend.com.br')">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" alt="Eduardo" class="quick-user-avatar">
+        <div class="quick-user-info">
+          <div class="quick-user-name">
+            Eduardo Almeida (Dudu)
+            <span class="role-badge-admin">MASTER</span>
+          </div>
+          <div class="quick-user-role">Diretoria Geral · Visão Completa God Mode</div>
+        </div>
+        <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: var(--gold-primary);"></i>
+      </div>
+
+      <!-- Larissa Noivas -->
+      <div class="quick-user-card" onclick="quickLogin('larissa@festblend.com.br')">
+        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150" alt="Larissa" class="quick-user-avatar">
+        <div class="quick-user-info">
+          <div class="quick-user-name">Larissa Vasconcelos</div>
+          <div class="quick-user-role">Closer · Noivas & Casamentos Cuiabá</div>
+        </div>
+        <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
+      </div>
+
+      <!-- Matheus Corporativo -->
+      <div class="quick-user-card" onclick="quickLogin('matheus@festblend.com.br')">
+        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150" alt="Matheus" class="quick-user-avatar">
+        <div class="quick-user-info">
+          <div class="quick-user-name">Matheus Peixoto</div>
+          <div class="quick-user-role">Closer · Corporativo & Debutantes 15 Anos</div>
+        </div>
+        <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      processLogin(email, password);
+    }
+
+    function quickLogin(email) {
+      document.getElementById('email').value = email;
+      document.getElementById('password').value = 'festblend2026';
+      processLogin(email, 'festblend2026');
+    }
+
+    function processLogin(email, password) {
+      const user = FESTBLEND_PRESET_USERS[email];
+      if (!user) {
+        alert('Credenciais não cadastradas no sistema Festblend.');
+        return;
+      }
+
+      const sessionData = {
+        id: user.id,
+        name: user.name,
+        role: user.role,
+        title: user.title,
+        email: user.email,
+        avatar: user.avatar,
+        permissions: user.permissions,
+        token: 'fb_token_' + Math.random().toString(36).substring(2) + Date.now().toString(36),
+        loggedAt: new Date().toISOString()
+      };
+
+      setFestblendSession(sessionData);
+
+      // Redirecionamento
+      const params = new URLSearchParams(window.location.search);
+      const redirect = params.get('redirect');
+      if (redirect && !redirect.includes('login.html')) {
+        window.location.href = redirect;
+      } else {
+        window.location.href = 'festblend_hub_desktop.html';
+      }
+    }
+  </script>
+</body>
+</html>

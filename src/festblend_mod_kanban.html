@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="pt-br" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Pipeline CRM & Funil de Eventos · Festblend Cuiabá 360</title>
+
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/theme.css">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/d1_client.js"></script>
+
+  <style>
+    body {
+      background: var(--bg-deep);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Stats Header */
+    .kanban-header {
+      padding: 16px 20px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .k-header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .k-title {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .k-stats-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .stat-pill {
+      background: #0a0a0e;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 6px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .stat-pill-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-pill-val {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--gold-light);
+    }
+
+    /* Kanban Board Container */
+    .board-container {
+      flex: 1;
+      display: flex;
+      gap: 14px;
+      padding: 18px 20px;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+
+    .kanban-column {
+      width: 300px;
+      min-width: 300px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .column-header {
+      padding: 12px 14px;
+      background: #0e0e13;
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .col-title-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .col-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gold-primary);
+    }
+
+    .col-title {
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--text-main);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .col-counter {
+      font-size: 0.7rem;
+      font-weight: 700;
+      background: var(--gold-subtle);
+      color: var(--gold-light);
+      padding: 2px 7px;
+      border-radius: 10px;
+      font-family: var(--font-mono);
+    }
+
+    .column-cards-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 150px;
+    }
+
+    .column-cards-list.drag-over {
+      background: rgba(197, 160, 89, 0.05);
+      border: 1px dashed var(--gold-primary);
+      border-radius: 10px;
+    }
+
+    /* Kanban Event Card */
+    .event-card {
+      background: #0f1015;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 12px;
+      cursor: grab;
+      transition: var(--transition-smooth);
+      position: relative;
+    }
+
+    .event-card:hover {
+      border-color: var(--gold-primary);
+      box-shadow: 0 4px 15px var(--gold-glow);
+      transform: translateY(-2px);
+    }
+
+    .card-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .card-client-name {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .card-tag {
+      font-size: 0.65rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+
+    .card-middle-info {
+      font-size: 0.73rem;
+      color: var(--text-sub);
+      margin-bottom: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .card-footer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(197, 160, 89, 0.1);
+      padding-top: 8px;
+      margin-top: 6px;
+    }
+
+    .card-value {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--gold-light);
+    }
+
+    .card-seller-pill {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOPO DE MÉTRICAS -->
+  <header class="kanban-header">
+    <div class="k-header-left">
+      <h2 class="k-title">Pipeline de Eventos & Funil Comercial</h2>
+      <div id="masterSellerFilterKanban" class="seller-filter-pill-group" style="display: none;">
+        <button class="seller-pill active" onclick="filterKanbanBySeller('all')">Todos</button>
+        <button class="seller-pill" onclick="filterKanbanBySeller('eduardo')">Eduardo</button>
+        <button class="seller-pill" onclick="filterKanbanBySeller('larissa')">Larissa</button>
+        <button class="seller-pill" onclick="filterKanbanBySeller('matheus')">Matheus</button>
+      </div>
+    </div>
+
+    <div class="k-stats-row">
+      <div class="stat-pill">
+        <span class="stat-pill-label">Total em Negociação</span>
+        <span class="stat-pill-val" id="kStatTotalNegotiating">R$ 0,00</span>
+      </div>
+
+      <div class="stat-pill">
+        <span class="stat-pill-label">Contratos Fechados</span>
+        <span class="stat-pill-val" id="kStatTotalClosed">R$ 0,00</span>
+      </div>
+
+      <div class="stat-pill">
+        <span class="stat-pill-label">Convidados Cotados</span>
+        <span class="stat-pill-val" id="kStatTotalGuests">0</span>
+      </div>
+
+      <button class="btn-luxury" onclick="alert('Novo evento pode ser cadastrado ou vinculado via WhatsApp.')">
+        <i data-lucide="plus" style="width: 14px; height: 14px;"></i>
+        Novo Lead
+      </button>
+    </div>
+  </header>
+
+  <!-- QUADRO KANBAN (8 COLUNAS) -->
+  <main class="board-container" id="boardContainer">
+    <!-- Colunas geradas dinamicamente com base nas 8 etapas de eventos -->
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    let CURRENT_SESSION = null;
+    let KANBAN_CARDS = [];
+    let CURRENT_SELLER = 'all';
+
+    const STAGES = [
+      { id: 'data_consultada', title: 'Data Consultada', color: '#c5a059' },
+      { id: 'qualificacao', title: 'Qualificação', color: '#60a5fa' },
+      { id: 'cardapio_degustacao', title: 'Degustação & Drinks', color: '#a78bfa' },
+      { id: 'proposta_enviada', title: 'Proposta Enviada', color: '#f59e0b' },
+      { id: 'negociacao_reserva', title: 'Em Negociação', color: '#38bdf8' },
+      { id: 'contrato_fechado', title: 'Contrato Fechado', color: '#10b981' },
+      { id: 'data_em_risco', title: 'Data em Risco', color: '#ef4444' },
+      { id: 'perdido', title: 'Data Liberada', color: '#6b7280' }
+    ];
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      CURRENT_SESSION = checkFestblendAuth();
+      if (!CURRENT_SESSION) return;
+
+      if (CURRENT_SESSION.role === 'admin') {
+        document.getElementById('masterSellerFilterKanban').style.display = 'flex';
+      } else {
+        CURRENT_SELLER = CURRENT_SESSION.id; // Vendedor vê apenas o dele
+      }
+
+      buildBoardColumns();
+      await loadCards();
+    });
+
+    function filterKanbanBySeller(sellerId) {
+      if (CURRENT_SESSION.role !== 'admin') return;
+      CURRENT_SELLER = sellerId;
+      document.querySelectorAll('#masterSellerFilterKanban .seller-pill').forEach(b => b.classList.remove('active'));
+      const activeBtn = document.querySelector(`#masterSellerFilterKanban .seller-pill[onclick*="'${sellerId}'"]`);
+      if (activeBtn) activeBtn.classList.add('active');
+      renderCards();
+    }
+
+    function buildBoardColumns() {
+      const container = document.getElementById('boardContainer');
+      container.innerHTML = '';
+
+      STAGES.forEach(st => {
+        const col = document.createElement('div');
+        col.className = 'kanban-column';
+        col.id = `col-${st.id}`;
+
+        col.innerHTML = `
+          <div class="column-header">
+            <div class="col-title-group">
+              <div class="col-dot" style="background:${st.color};"></div>
+              <span class="col-title">${st.title}</span>
+            </div>
+            <span class="col-counter" id="count-${st.id}">0</span>
+          </div>
+          <div class="column-cards-list" id="list-${st.id}" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, '${st.id}')">
+          </div>
+        `;
+        container.appendChild(col);
+      });
+    }
+
+    async function loadCards() {
+      const sql = "SELECT * FROM festblend_pipeline_cards ORDER BY updated_at DESC;";
+      KANBAN_CARDS = await queryD1(sql);
+      renderCards();
+    }
+
+    function renderCards() {
+      // Limpar colunas
+      STAGES.forEach(st => {
+        const list = document.getElementById(`list-${st.id}`);
+        if (list) list.innerHTML = '';
+        const count = document.getElementById(`count-${st.id}`);
+        if (count) count.textContent = '0';
+      });
+
+      let filtered = [...KANBAN_CARDS];
+      if (CURRENT_SESSION.role !== 'admin') {
+        filtered = filtered.filter(c => c.assigned_to === CURRENT_SESSION.id);
+      } else if (CURRENT_SELLER !== 'all') {
+        filtered = filtered.filter(c => c.assigned_to === CURRENT_SELLER);
+      }
+
+      let totalNeg = 0;
+      let totalClosed = 0;
+      let totalGuests = 0;
+
+      const stageCounts = {};
+      STAGES.forEach(s => stageCounts[s.id] = 0);
+
+      filtered.forEach(card => {
+        stageCounts[card.stage] = (stageCounts[card.stage] || 0) + 1;
+
+        if (card.stage === 'contrato_fechado') {
+          totalClosed += (card.deal_value || 0);
+        } else if (card.stage !== 'perdido') {
+          totalNeg += (card.deal_value || 0);
+        }
+        totalGuests += (card.guest_count || 0);
+
+        const targetList = document.getElementById(`list-${card.stage}`);
+        if (targetList) {
+          const cardEl = document.createElement('div');
+          cardEl.className = 'event-card';
+          cardEl.draggable = true;
+          cardEl.id = `card-${card.id}`;
+          cardEl.ondragstart = (e) => handleDragStart(e, card.id);
+
+          const isRisk = card.stage === 'data_em_risco';
+          const badgeClass = isRisk ? 'badge-risk' : 'badge-gold';
+
+          cardEl.innerHTML = `
+            <div class="card-top-row">
+              <span class="card-client-name">${card.client_name || 'Evento'}</span>
+              <span class="${badgeClass}">${card.event_type || 'Casamento'}</span>
+            </div>
+            <div class="card-middle-info">
+              <span><strong>Data:</strong> ${card.event_date ? card.event_date.split('-').reverse().join('/') : 'A definir'}</span>
+              <span><strong>Convidados:</strong> ${card.guest_count || 0} pessoas</span>
+              <span>${card.observations ? card.observations.slice(0, 60) + '...' : ''}</span>
+            </div>
+            <div class="card-footer-row">
+              <span class="card-value">R$ ${(card.deal_value || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+              <span class="card-seller-pill">
+                <i data-lucide="user" style="width:12px;height:12px;"></i>
+                ${card.assigned_to ? card.assigned_to.toUpperCase() : 'EDUARDO'}
+              </span>
+            </div>
+          `;
+          targetList.appendChild(cardEl);
+        }
+      });
+
+      // Atualizar contadores
+      STAGES.forEach(st => {
+        const count = document.getElementById(`count-${st.id}`);
+        if (count) count.textContent = stageCounts[st.id] || 0;
+      });
+
+      document.getElementById('kStatTotalNegotiating').textContent = `R$ ${totalNeg.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+      document.getElementById('kStatTotalClosed').textContent = `R$ ${totalClosed.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+      document.getElementById('kStatTotalGuests').textContent = totalGuests.toLocaleString('pt-BR');
+
+      lucide.createIcons();
+    }
+
+    let DRAGGED_CARD_ID = null;
+
+    function handleDragStart(e, cardId) {
+      DRAGGED_CARD_ID = cardId;
+      e.dataTransfer.setData('text/plain', cardId);
+    }
+
+    function handleDragOver(e) {
+      e.preventDefault();
+      e.currentTarget.classList.add('drag-over');
+    }
+
+    function handleDragLeave(e) {
+      e.currentTarget.classList.remove('drag-over');
+    }
+
+    async function handleDrop(e, targetStage) {
+      e.preventDefault();
+      e.currentTarget.classList.remove('drag-over');
+
+      if (!DRAGGED_CARD_ID) return;
+
+      const card = KANBAN_CARDS.find(c => c.id === DRAGGED_CARD_ID);
+      if (!card || card.stage === targetStage) return;
+
+      card.stage = targetStage;
+      renderCards();
+
+      // Salvar movimentação no D1
+      const sql = "UPDATE festblend_pipeline_cards SET stage = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?;";
+      await queryD1(sql, [targetStage, DRAGGED_CARD_ID]);
+
+      if (card.phone) {
+        const sqlContact = "UPDATE festblend_contacts SET deal_stage = ?, updated_at = CURRENT_TIMESTAMP WHERE phone = ?;";
+        await queryD1(sqlContact, [targetStage, card.phone]);
+      }
+    }
+  </script>
+</body>
+</html>

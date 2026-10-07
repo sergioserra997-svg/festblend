@@ -1,0 +1,12 @@
+{
+  "slug": "festblend",
+  "name": "Festblend Cuiabá 360",
+  "segment": "Coquetelaria, Bar para Eventos & Open Bar de Alto Padrão",
+  "domain": "festblendcrm.aisecompany.com.br",
+  "d1_database_name": "festblend-db",
+  "d1_database_id": "780cd440-a787-4e85-9e26-f642c3852c0e",
+  "cloudflare_account_id": "952c2920af5b8e5db656b378e7a80b53",
+  "primary_color": "#c5a059",
+  "accent_color": "#f1e3ad",
+  "dark_bg": "#08080a"
+}

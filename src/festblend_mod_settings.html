@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-br" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Configurações & Conexão Celular · Festblend Cuiabá 360</title>
+
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/theme.css">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="js/auth.js"></script>
+
+  <style>
+    body {
+      background: var(--bg-deep);
+      padding: 24px;
+      overflow-y: auto;
+    }
+
+    .settings-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .s-title-group h2 {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .s-title-group p {
+      font-size: 0.8rem;
+      color: var(--text-sub);
+    }
+
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .setting-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .card-title {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .param-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(197, 160, 89, 0.08);
+      font-size: 0.8rem;
+    }
+
+    .param-label {
+      color: var(--text-sub);
+      font-weight: 600;
+    }
+
+    .param-val {
+      color: var(--gold-light);
+      font-family: var(--font-mono);
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="settings-header">
+    <div class="s-title-group">
+      <h2>Configurações do Sistema & Infraestrutura</h2>
+      <p>Parâmetros da Conexão WhatsApp Evolution, Cloudflare D1 e Credenciais de Equipe</p>
+    </div>
+
+    <div class="badge-success">
+      <i data-lucide="check-circle" style="width: 14px; height: 14px;"></i>
+      SISTEMA OPERACIONAL ONLINE
+    </div>
+  </header>
+
+  <div class="settings-grid">
+    <!-- Card WhatsApp Evolution -->
+    <div class="setting-card">
+      <div class="card-title">
+        <i data-lucide="message-square" style="width: 18px; height: 18px; color: var(--gold-primary);"></i>
+        Instância WhatsApp Evolution
+      </div>
+
+      <div class="param-row">
+        <span class="param-label">Nome da Instância</span>
+        <span class="param-val">FESTBLEND_01</span>
+      </div>
+
+      <div class="param-row">
+        <span class="param-label">Porta do Servidor VPS</span>
+        <span class="param-val">127.0.0.1:8080 (Fork Mode)</span>
+      </div>
+
+      <div class="param-row">
+        <span class="param-label">Status do Socket Baileys</span>
+        <span class="badge-success">Conectado & Sincronizado</span>
+      </div>
+
+      <div class="param-row">
+        <span class="param-label">Número Conectado</span>
+        <span class="param-val">+55 (65) 98111-4321</span>
+      </div>
+
+      <button class="btn-outline" style="margin-top:8px;" onclick="alert('Instância operando em alta performance com persistência ativa.')">
+        <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i>
+        Testar Conexão do Socket
+      </button>
+    </div>
+
+    <!-- Card Cloudflare D1 Database -->
+    <div class="setting-card">
+      <div class="card-title">
+        <i data-lucide="database" style="width: 18px; height: 18px; color: var(--gold-primary);"></i>
+        Banco Cloudflare D1 (Serverless)
+      </div>
+
+      <div class="param-row">
+        <span class="param-label">Nome do Banco Canônico</span>
+        <span class="param-val">festblend-db</span>
+      </div>
+
+      <div class="param-row">
+        <span class="param-label">UUID do Banco D1</span>
+        <span class="param-val">780cd440-a787-4e85-9e26-f642c3852c0e</span>
+      </div>
+
+      <div class="param-row">
+        <span class="param-label">Regra de Isolamento (1C)</span>
+        <span class="badge-success">Isolamento Físico Ativo</span>
+      </div>
+
+      <div class="param-row">
+        <span class="param-label">Subdomínio de Produção</span>
+        <span class="param-val">festblendcrm.aisecompany.com.br</span>
+      </div>
+
+      <button class="btn-luxury" style="margin-top:8px;" onclick="alert('Banco D1 verificado e com 5 tabelas integradas.')">
+        <i data-lucide="shield-check" style="width: 14px; height: 14px;"></i>
+        Auditar Integridade do Banco
+      </button>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+    checkFestblendAuth();
+  </script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-br" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Festblend Cuiabá 360 · Mobile Hub</title>
+
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/theme.css">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="js/auth.js"></script>
+
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+      background: var(--bg-deep);
+    }
+
+    .mobile-header {
+      height: 56px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      flex-shrink: 0;
+    }
+
+    .mobile-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .mobile-brand h1 {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      font-weight: 800;
+      background: var(--gold-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .mobile-content {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #mobile-frame {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    .bottom-nav {
+      height: 64px;
+      background: var(--bg-surface);
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding-bottom: env(safe-area-inset-bottom);
+      flex-shrink: 0;
+    }
+
+    .nav-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-sans);
+      font-size: 0.65rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 6px;
+      transition: var(--transition-smooth);
+    }
+
+    .nav-btn i {
+      width: 20px;
+      height: 20px;
+    }
+
+    .nav-btn.active {
+      color: var(--gold-primary);
+    }
+
+    .nav-btn.active i {
+      color: var(--gold-primary);
+      filter: drop-shadow(0 0 6px var(--gold-glow));
+    }
+  </style>
+</head>
+<body>
+
+  <header class="mobile-header">
+    <div class="mobile-brand">
+      <i data-lucide="wine" style="width: 20px; height: 20px; color: var(--gold-primary);"></i>
+      <h1>Festblend Cuiabá 360</h1>
+    </div>
+
+    <button onclick="festblendLogout()" style="background:none;border:none;color:var(--text-muted);padding:6px;">
+      <i data-lucide="log-out" style="width: 18px; height: 18px;"></i>
+    </button>
+  </header>
+
+  <div class="mobile-content">
+    <iframe id="mobile-frame" src="festblend_mod_chats.html"></iframe>
+  </div>
+
+  <nav class="bottom-nav">
+    <button class="nav-btn" data-role-restrict="admin" onclick="loadMobileModule('festblend_mod_dono.html', this)">
+      <i data-lucide="shield-check"></i>
+      <span>Radar</span>
+    </button>
+
+    <button class="nav-btn active" onclick="loadMobileModule('festblend_mod_chats.html', this)">
+      <i data-lucide="message-square"></i>
+      <span>Conversas</span>
+    </button>
+
+    <button class="nav-btn" onclick="loadMobileModule('festblend_mod_kanban.html', this)">
+      <i data-lucide="kanban"></i>
+      <span>Pipeline</span>
+    </button>
+
+    <button class="nav-btn" onclick="loadMobileModule('festblend_mod_calendar.html', this)">
+      <i data-lucide="calendar"></i>
+      <span>Agenda</span>
+    </button>
+
+    <button class="nav-btn" onclick="loadMobileModule('festblend_mod_cardapio.html', this)">
+      <i data-lucide="cocktail"></i>
+      <span>Drinks</span>
+    </button>
+  </nav>
+
+  <script>
+    lucide.createIcons();
+
+    const session = checkFestblendAuth();
+    if (session && session.role === 'admin') {
+      const radarBtn = document.querySelector('button[onclick*="festblend_mod_dono.html"]');
+      if (radarBtn) {
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        radarBtn.classList.add('active');
+        document.getElementById('mobile-frame').src = 'festblend_mod_dono.html';
+      }
+    }
+
+    function loadMobileModule(url, btnEl) {
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+      document.getElementById('mobile-frame').src = url;
+    }
+  </script>
+</body>
+</html>

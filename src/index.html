@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Festblend Cuiabá 360 · Carregando Sistema...</title>
+  <script src="js/auth.js"></script>
+  <script>
+    (function() {
+      // 1. Checagem de autenticação
+      var session = getFestblendSession();
+      if (!session) {
+        window.location.replace('login.html');
+        return;
+      }
+
+      // 2. Roteamento por dispositivo
+      function isMobileDevice() {
+        var ua = navigator.userAgent || '';
+        var isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua) ||
+                         (navigator.maxTouchPoints > 1 && /Macintosh/i.test(ua));
+        var isSmallScreen = (window.innerWidth > 0 && window.innerWidth <= 850) || (screen.width > 0 && screen.width <= 850);
+        return isMobileUA || isSmallScreen;
+      }
+
+      var target = isMobileDevice() ? 'festblend_hub_mobile.html' : 'festblend_hub_desktop.html';
+      window.location.replace(target + (window.location.search || ''));
+    })();
+  </script>
+</head>
+<body style="background: #08080a; color: #c5a059; font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0;">
+  <p>Carregando Central Festblend Cuiabá 360...</p>
+</body>
+</html>

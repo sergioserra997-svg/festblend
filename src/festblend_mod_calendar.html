@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt-br" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Radar de Datas & Disponibilidade de Agenda · Festblend Cuiabá 360</title>
+
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/theme.css">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/d1_client.js"></script>
+
+  <style>
+    body {
+      background: var(--bg-deep);
+      padding: 24px;
+      overflow-y: auto;
+    }
+
+    .calendar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .cal-title-group h2 {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .cal-title-group p {
+      font-size: 0.8rem;
+      color: var(--text-sub);
+    }
+
+    .dates-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
+    }
+
+    .date-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      transition: var(--transition-smooth);
+    }
+
+    .date-card:hover {
+      border-color: var(--gold-primary);
+      box-shadow: 0 4px 20px var(--gold-glow);
+    }
+
+    .date-badge-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .date-number {
+      font-family: var(--font-mono);
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--gold-light);
+    }
+
+    .date-weekday {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .date-client-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .date-meta-list {
+      font-size: 0.76rem;
+      color: var(--text-sub);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .date-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(197, 160, 89, 0.1);
+      padding-top: 10px;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="calendar-header">
+    <div class="cal-title-group">
+      <h2>Radar de Datas & Disponibilidade de Agenda</h2>
+      <p>Mapeamento de Escassez dos Finais de Semana de Alta Temporada · Cuiabá e Região</p>
+    </div>
+
+    <div class="stat-pill">
+      <span class="stat-pill-label">Capacidade Operacional</span>
+      <span class="stat-pill-val">Até 3 Estruturas Simultâneas</span>
+    </div>
+  </header>
+
+  <div class="dates-grid">
+    <!-- 24/10/2026 -->
+    <div class="date-card" style="border-color: rgba(239, 68, 68, 0.4);">
+      <div class="date-badge-row">
+        <div>
+          <div class="date-number">24/10/2026</div>
+          <div class="date-weekday">Sábado · Alta Temporada</div>
+        </div>
+        <span class="badge-risk">Data em Risco Crítico</span>
+      </div>
+
+      <div class="date-client-title">Casamento Beatriz & Lucas</div>
+
+      <div class="date-meta-list">
+        <div><strong>Local:</strong> Espaço Ágora Cuiabá</div>
+        <div><strong>Convidados:</strong> 200 pessoas · Bar Premium & Gin</div>
+        <div><strong>Responsável:</strong> Larissa Vasconcelos</div>
+        <div><strong>Proposta:</strong> R$ 13.200,00 (Sem sinal pago há 4 dias)</div>
+      </div>
+
+      <div class="date-card-footer">
+        <span style="font-size:0.7rem;color:var(--red);font-weight:700;">Apenas 17 dias restantes</span>
+        <button class="btn-luxury" style="padding:4px 10px;font-size:0.7rem;" onclick="alert('Notificando noiva com aviso de liberação de data em 24h.')">
+          Liberar Data
+        </button>
+      </div>
+    </div>
+
+    <!-- 14/11/2026 -->
+    <div class="date-card" style="border-color: rgba(197, 160, 89, 0.4);">
+      <div class="date-badge-row">
+        <div>
+          <div class="date-number">14/11/2026</div>
+          <div class="date-weekday">Sábado · Feriado Prolongado</div>
+        </div>
+        <span class="badge-gold">Reserva em Negociação</span>
+      </div>
+
+      <div class="date-client-title">Casamento Amanda Silveira</div>
+
+      <div class="date-meta-list">
+        <div><strong>Local:</strong> Buffet Leila Malouf</div>
+        <div><strong>Convidados:</strong> 250 pessoas · Bar 360 Full</div>
+        <div><strong>Responsável:</strong> Larissa Vasconcelos</div>
+        <div><strong>Proposta:</strong> R$ 14.800,00 (Entrada R$ 3.000,00)</div>
+      </div>
+
+      <div class="date-card-footer">
+        <span style="font-size:0.7rem;color:var(--gold-light);font-weight:700;">Faltam 38 dias</span>
+        <button class="btn-outline" style="padding:4px 10px;font-size:0.7rem;" onclick="alert('Contrato gerado com sucesso.')">
+          Ver Contrato
+        </button>
+      </div>
+    </div>
+
+    <!-- 21/11/2026 -->
+    <div class="date-card" style="border-color: rgba(96, 165, 250, 0.4);">
+      <div class="date-badge-row">
+        <div>
+          <div class="date-number">21/11/2026</div>
+          <div class="date-weekday">Sábado · Livre</div>
+        </div>
+        <span class="badge-gold" style="color:#60a5fa;border-color:#60a5fa;">Agenda Aberta</span>
+      </div>
+
+      <div class="date-client-title">Data Disponível para Reserva</div>
+
+      <div class="date-meta-list">
+        <div><strong>Consultas:</strong> 2 noivas cotando orçamento</div>
+        <div><strong>Status:</strong> Nenhuma proposta travada</div>
+        <div><strong>Meta:</strong> Fechar contrato acima de R$ 12.000,00</div>
+      </div>
+
+      <div class="date-card-footer">
+        <span style="font-size:0.7rem;color:#60a5fa;font-weight:700;">Oportunidade Comercial</span>
+        <button class="btn-luxury" style="padding:4px 10px;font-size:0.7rem;" onclick="alert('Disparando lista de espera para o sábado 21/11.')">
+          Acionar Leads
+        </button>
+      </div>
+    </div>
+
+    <!-- 05/12/2026 -->
+    <div class="date-card">
+      <div class="date-badge-row">
+        <div>
+          <div class="date-number">05/12/2026</div>
+          <div class="date-weekday">Sábado · Dezembro Nobre</div>
+        </div>
+        <span class="badge-gold">Degustação Agendada</span>
+      </div>
+
+      <div class="date-client-title">15 Anos Debutante Isabella</div>
+
+      <div class="date-meta-list">
+        <div><strong>Local:</strong> Villa Felici Cuiabá</div>
+        <div><strong>Convidados:</strong> 180 pessoas · Bar Teen & Adulto</div>
+        <div><strong>Responsável:</strong> Matheus Peixoto</div>
+        <div><strong>Proposta:</strong> R$ 11.500,00</div>
+      </div>
+
+      <div class="date-card-footer">
+        <span style="font-size:0.7rem;color:var(--gold-light);font-weight:700;">Faltam 59 dias</span>
+        <button class="btn-outline" style="padding:4px 10px;font-size:0.7rem;" onclick="alert('Degustação confirmada no showroom Festblend.')">
+          Ver Degustação
+        </button>
+      </div>
+    </div>
+
+    <!-- 19/12/2026 -->
+    <div class="date-card" style="border-color: rgba(16, 185, 129, 0.4);">
+      <div class="date-badge-row">
+        <div>
+          <div class="date-number">19/12/2026</div>
+          <div class="date-weekday">Sábado · Confraternização</div>
+        </div>
+        <span class="badge-success">Contrato Fechado</span>
+      </div>
+
+      <div class="date-client-title">Confraternização AgroCerrado 2026</div>
+
+      <div class="date-meta-list">
+        <div><strong>Local:</strong> Cenarium Rural Cuiabá</div>
+        <div><strong>Convidados:</strong> 450 pessoas · Estrutura 360 Completa</div>
+        <div><strong>Responsável:</strong> Eduardo Almeida</div>
+        <div><strong>Valor Total:</strong> R$ 28.000,00 (Sinal R$ 10.000,00 Pago)</div>
+      </div>
+
+      <div class="date-card-footer">
+        <span style="font-size:0.7rem;color:var(--green);font-weight:700;">Data 100% Bloqueada</span>
+        <span class="badge-success">Sinal Pago via PIX</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+    checkFestblendAuth();
+  </script>
+</body>
+</html>

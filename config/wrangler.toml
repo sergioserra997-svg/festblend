@@ -1,0 +1,8 @@
+name = "festblend-crm"
+compatibility_date = "2026-08-01"
+pages_build_output_dir = "./src"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "festblend-db"
+database_id = "780cd440-a787-4e85-9e26-f642c3852c0e"

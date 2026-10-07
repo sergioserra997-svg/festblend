@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="pt-br" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Central de Conversas WhatsApp Evolution · Festblend Cuiabá 360</title>
+
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/theme.css">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/d1_client.js"></script>
+
+  <style>
+    body {
+      background: var(--bg-deep);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Subheader with Seller Filter */
+    .chat-subheader {
+      height: 52px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      flex-shrink: 0;
+    }
+
+    .subheader-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .subheader-title {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .seller-filter-pill-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #0a0a0e;
+      padding: 3px;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+    }
+
+    .seller-pill {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .seller-pill:hover {
+      color: var(--text-main);
+    }
+
+    .seller-pill.active {
+      background: var(--gold-gradient);
+      color: #08080a;
+      box-shadow: 0 2px 8px var(--gold-glow);
+    }
+
+    .seller-locked-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--gold-subtle);
+      border: 1px solid var(--card-border);
+      color: var(--gold-light);
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Main Chats Layout */
+    .chats-layout {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* Left Column: Chat List */
+    .chats-sidebar {
+      width: 320px;
+      background: var(--bg-surface);
+      border-right: 1px solid var(--card-border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    .search-box-wrap {
+      padding: 12px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .search-input-inner {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #0a0a0e;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 8px 12px;
+    }
+
+    .search-input-inner input {
+      background: none;
+      border: none;
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+      outline: none;
+      width: 100%;
+    }
+
+    .chat-list-container {
+      flex: 1;
+      overflow-y: auto;
+      list-style: none;
+    }
+
+    .chat-item-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(197, 160, 89, 0.08);
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .chat-item-card:hover {
+      background: var(--bg-hover);
+    }
+
+    .chat-item-card.active {
+      background: var(--gold-subtle);
+      border-left: 3px solid var(--gold-primary);
+    }
+
+    .chat-avatar-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .chat-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid var(--card-border);
+    }
+
+    .chat-online-dot {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 11px;
+      height: 11px;
+      background: var(--green);
+      border: 2px solid var(--bg-surface);
+      border-radius: 50%;
+    }
+
+    .chat-info {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .chat-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .chat-name {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .chat-time {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    .chat-preview-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .chat-preview-text {
+      font-size: 0.74rem;
+      color: var(--text-sub);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 180px;
+    }
+
+    .chat-event-badge {
+      font-size: 0.65rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--gold-light);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+
+    /* Center Column: Chat Messages Stream */
+    .chat-main-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: #09090c;
+    }
+
+    .active-chat-bar {
+      height: 64px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      flex-shrink: 0;
+    }
+
+    .active-lead-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .active-lead-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid var(--gold-primary);
+    }
+
+    .active-lead-name {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .active-lead-phone {
+      font-size: 0.75rem;
+      color: var(--gold-light);
+      font-family: var(--font-mono);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .active-bar-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .messages-stream-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .message-row {
+      display: flex;
+      width: 100%;
+    }
+
+    .message-row.in {
+      justify-content: flex-start;
+    }
+
+    .message-row.out {
+      justify-content: flex-end;
+    }
+
+    .message-bubble {
+      max-width: 65%;
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-size: 0.85rem;
+      line-height: 1.45;
+      position: relative;
+    }
+
+    .message-row.in .message-bubble {
+      background: #15151c;
+      color: var(--text-main);
+      border: 1px solid var(--card-border);
+      border-top-left-radius: 2px;
+    }
+
+    .message-row.out .message-bubble {
+      background: linear-gradient(135deg, rgba(197, 160, 89, 0.22) 0%, rgba(197, 160, 89, 0.1) 100%);
+      color: var(--text-main);
+      border: 1px solid var(--gold-primary);
+      border-top-right-radius: 2px;
+    }
+
+    .message-sender-name {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--gold-primary);
+      margin-bottom: 4px;
+    }
+
+    .message-time-meta {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+      font-family: var(--font-mono);
+    }
+
+    /* Audio Player Widget */
+    .audio-player-card {
+      background: #0d0d12;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .audio-controls-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-play-audio {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--gold-gradient);
+      border: none;
+      color: #08080a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: var(--transition-smooth);
+    }
+
+    .btn-play-audio:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px var(--gold-glow);
+    }
+
+    .audio-waveform-bar {
+      flex: 1;
+      height: 6px;
+      background: rgba(197, 160, 89, 0.2);
+      border-radius: 3px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .audio-progress-fill {
+      width: 35%;
+      height: 100%;
+      background: var(--gold-gradient);
+      border-radius: 3px;
+    }
+
+    .audio-transcription-box {
+      font-size: 0.78rem;
+      font-style: italic;
+      color: var(--gold-light);
+      background: rgba(197, 160, 89, 0.06);
+      padding: 6px 10px;
+      border-radius: 6px;
+      border-left: 2px solid var(--gold-primary);
+    }
+
+    /* Message Input Box */
+    .chat-input-wrapper {
+      padding: 16px 20px;
+      background: var(--bg-surface);
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .chat-text-input {
+      flex: 1;
+      background: #0a0a0e;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+      outline: none;
+      transition: var(--transition-smooth);
+    }
+
+    .chat-text-input:focus {
+      border-color: var(--gold-primary);
+      box-shadow: 0 0 12px var(--gold-glow);
+    }
+
+    .btn-send-message {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--gold-gradient);
+      border: none;
+      color: #08080a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .btn-send-message:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px var(--gold-glow);
+    }
+
+    /* Right Column: Lead / Event Detail File */
+    .lead-detail-panel {
+      width: 340px;
+      background: var(--bg-surface);
+      border-left: 1px solid var(--card-border);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      padding: 20px 16px;
+      flex-shrink: 0;
+    }
+
+    .panel-header-title {
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: var(--gold-primary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .panel-profile-top {
+      text-align: center;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--card-border);
+      margin-bottom: 16px;
+    }
+
+    .panel-lead-avatar {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--gold-primary);
+      margin-bottom: 10px;
+    }
+
+    .panel-lead-name {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .panel-lead-phone {
+      font-size: 0.78rem;
+      color: var(--gold-light);
+      font-family: var(--font-mono);
+      margin-top: 4px;
+    }
+
+    .event-field-group {
+      margin-bottom: 14px;
+    }
+
+    .event-field-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--gold-light);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .event-field-input, .event-field-select {
+      width: 100%;
+      background: #0a0a0e;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+      outline: none;
+      transition: var(--transition-smooth);
+    }
+
+    .event-field-input:focus, .event-field-select:focus {
+      border-color: var(--gold-primary);
+    }
+
+    .countdown-banner {
+      background: var(--gold-subtle);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .countdown-icon {
+      color: var(--gold-primary);
+      flex-shrink: 0;
+    }
+
+    .countdown-text-main {
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--gold-light);
+    }
+
+    .countdown-text-sub {
+      font-size: 0.68rem;
+      color: var(--text-sub);
+    }
+
+    .btn-save-d1 {
+      width: 100%;
+      padding: 12px;
+      background: var(--gold-gradient);
+      border: none;
+      border-radius: 8px;
+      color: #08080a;
+      font-weight: 800;
+      font-size: 0.84rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 10px;
+      transition: var(--transition-smooth);
+    }
+
+    .btn-save-d1:hover {
+      box-shadow: 0 4px 15px var(--gold-glow);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SUBHEADER COM SELETOR DE VENDEDORES (APENAS MASTER) -->
+  <header class="chat-subheader">
+    <div class="subheader-left">
+      <div class="subheader-title">
+        <i data-lucide="message-square" style="width: 17px; height: 17px; color: var(--gold-primary);"></i>
+        Central de Atendimentos WhatsApp Evolution
+      </div>
+    </div>
+
+    <!-- Seletor Master para Eduardo -->
+    <div id="masterSellerSelector" class="seller-filter-pill-group" style="display: none;">
+      <button class="seller-pill active" onclick="filterBySeller('all')">Todos os Atendimentos</button>
+      <button class="seller-pill" onclick="filterBySeller('eduardo')">Eduardo (Diretoria)</button>
+      <button class="seller-pill" onclick="filterBySeller('larissa')">Larissa · Noivas</button>
+      <button class="seller-pill" onclick="filterBySeller('matheus')">Matheus · 15 Anos / Corp</button>
+    </div>
+
+    <!-- Indicador de Vendedor Restrito -->
+    <div id="sellerRestrictedBadge" class="seller-locked-badge" style="display: none;">
+      <i data-lucide="lock" style="width: 13px; height: 13px;"></i>
+      <span id="sellerLockedName">Seus Atendimentos Privativos</span>
+    </div>
+  </header>
+
+  <div class="chats-layout">
+    <!-- COLUNA ESQUERDA: LISTA DE CONTATOS -->
+    <aside class="chats-sidebar">
+      <div class="search-box-wrap">
+        <div class="search-input-inner">
+          <i data-lucide="search" style="width: 15px; height: 15px; color: var(--text-muted);"></i>
+          <input type="text" id="searchInput" placeholder="Buscar por noiva, buffet ou telefone..." onkeyup="handleSearch()">
+        </div>
+      </div>
+
+      <ul class="chat-list-container" id="chatListContainer">
+        <!-- Itens inseridos dinamicamente via JS -->
+      </ul>
+    </aside>
+
+    <!-- COLUNA CENTRAL: CHAT STREAM -->
+    <main class="chat-main-area">
+      <!-- Barra do contato ativo -->
+      <div class="active-chat-bar">
+        <div class="active-lead-meta">
+          <img src="" alt="Lead" id="activeLeadAvatar" class="active-lead-avatar">
+          <div>
+            <div class="active-lead-name" id="activeLeadName">Carregando...</div>
+            <div class="active-lead-phone">
+              <span id="activeLeadPhone"></span>
+              <span class="badge-gold" id="activeLeadEventBadge">Casamento</span>
+              <span class="badge-success" id="activeD1Badge">D1 Sincronizado</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="active-bar-actions">
+          <button class="btn-outline" onclick="openWhatsAppDirect()">
+            <i data-lucide="external-link" style="width: 14px; height: 14px;"></i>
+            WhatsApp Web
+          </button>
+          <button class="btn-outline" onclick="exportChatTxt()">
+            <i data-lucide="download" style="width: 14px; height: 14px;"></i>
+            Exportar TXT
+          </button>
+        </div>
+      </div>
+
+      <!-- Fluxo de Mensagens -->
+      <div class="messages-stream-container" id="messagesStream">
+        <!-- Balões inseridos dinamicamente via JS -->
+      </div>
+
+      <!-- Barra de Envio de Mensagem -->
+      <div class="chat-input-wrapper">
+        <input type="text" id="messageInput" class="chat-text-input" placeholder="Digite uma resposta ou proposta de evento..." onkeydown="handleKeySend(event)">
+        <button class="btn-send-message" onclick="sendMessage()" title="Enviar Mensagem">
+          <i data-lucide="send" style="width: 18px; height: 18px;"></i>
+        </button>
+      </div>
+    </main>
+
+    <!-- COLUNA DIREITA: FICHA TÉCNICA DO EVENTO -->
+    <aside class="lead-detail-panel">
+      <div class="panel-header-title">
+        <span>Ficha do Evento & Qualificação</span>
+        <i data-lucide="file-text" style="width: 16px; height: 16px;"></i>
+      </div>
+
+      <div class="panel-profile-top">
+        <img src="" alt="Lead" id="panelLeadAvatar" class="panel-lead-avatar">
+        <div class="panel-lead-name" id="panelLeadName">Carregando...</div>
+        <div class="panel-lead-phone" id="panelLeadPhone"></div>
+      </div>
+
+      <!-- Banner de Contagem Regressiva da Data -->
+      <div class="countdown-banner" id="countdownBanner">
+        <div class="countdown-icon">
+          <i data-lucide="clock" style="width: 22px; height: 22px;"></i>
+        </div>
+        <div>
+          <div class="countdown-text-main" id="countdownMainText">Data do Evento: 14/11/2026</div>
+          <div class="countdown-text-sub" id="countdownSubText">Faltam 38 dias para a data do evento</div>
+        </div>
+      </div>
+
+      <div class="event-field-group">
+        <label class="event-field-label">Tipo de Evento</label>
+        <select id="fieldEventType" class="event-field-select">
+          <option value="Casamento">Casamento</option>
+          <option value="15 Anos Debutante">15 Anos Debutante</option>
+          <option value="Formatura">Formatura</option>
+          <option value="Corporativo Confraternização">Corporativo Confraternização</option>
+          <option value="Aniversário 40 Anos">Aniversário Adulto</option>
+          <option value="Planejamento Geral">Planejamento Interno</option>
+        </select>
+      </div>
+
+      <div class="event-field-group">
+        <label class="event-field-label">Data do Evento</label>
+        <input type="date" id="fieldEventDate" class="event-field-input" onchange="updateCountdownFromDate()">
+      </div>
+
+      <div class="event-field-group">
+        <label class="event-field-label">Buffet / Espaço em Cuiabá</label>
+        <input type="text" id="fieldEventLocation" class="event-field-input" placeholder="Ex: Buffet Leila Malouf">
+      </div>
+
+      <div class="event-field-group">
+        <label class="event-field-label">Quantidade de Convidados</label>
+        <input type="number" id="fieldGuestCount" class="event-field-input" placeholder="Ex: 250">
+      </div>
+
+      <div class="event-field-group">
+        <label class="event-field-label">Cardápio de Drinks</label>
+        <input type="text" id="fieldMenuType" class="event-field-input" placeholder="Ex: Bar Premium 360 · Gin & Moscow">
+      </div>
+
+      <div class="event-field-group">
+        <label class="event-field-label">Estágio do Funil</label>
+        <select id="fieldDealStage" class="event-field-select">
+          <option value="data_consultada">Data Consultada</option>
+          <option value="qualificacao">Qualificação</option>
+          <option value="cardapio_degustacao">Cardápio & Degustação</option>
+          <option value="proposta_enviada">Proposta Enviada</option>
+          <option value="negociacao_reserva">Em Negociação & Reserva</option>
+          <option value="contrato_fechado">Contrato Fechado & Sinal Pago</option>
+          <option value="data_em_risco">Data em Risco Urgente</option>
+          <option value="perdido">Data Liberada / Perdido</option>
+        </select>
+      </div>
+
+      <div class="event-field-group">
+        <label class="event-field-label">Valor Total da Proposta (R$)</label>
+        <input type="number" id="fieldDealValue" class="event-field-input" step="100" placeholder="Ex: 14800">
+      </div>
+
+      <div class="event-field-group">
+        <label class="event-field-label">Sinal de Entrada Pago (R$)</label>
+        <input type="number" id="fieldDownPayment" class="event-field-input" step="100" placeholder="Ex: 3000">
+      </div>
+
+      <div class="event-field-group" data-role-restrict="admin">
+        <label class="event-field-label">Vendedor Responsável</label>
+        <select id="fieldAssignedTo" class="event-field-select">
+          <option value="eduardo">Eduardo Almeida (Dono)</option>
+          <option value="larissa">Larissa Vasconcelos (Noivas)</option>
+          <option value="matheus">Matheus Peixoto (15 Anos/Corp)</option>
+        </select>
+      </div>
+
+      <div class="event-field-group">
+        <label class="event-field-label">Observações Críticas do Evento</label>
+        <textarea id="fieldNotes" class="event-field-input" rows="3" placeholder="Anotações de alinhamento com os noivos..."></textarea>
+      </div>
+
+      <button class="btn-save-d1" id="btnSaveD1" onclick="saveLeadDetailsD1()">
+        <i data-lucide="save" style="width: 15px; height: 15px;"></i>
+        Salvar no Cloudflare D1
+      </button>
+    </aside>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    let CURRENT_SESSION = null;
+    let ALL_CONTACTS = [];
+    let FILTERED_CONTACTS = [];
+    let ACTIVE_CONTACT = null;
+    let CURRENT_SELLER_FILTER = 'all';
+
+    // Inicialização da Página
+    document.addEventListener('DOMContentLoaded', async () => {
+      CURRENT_SESSION = checkFestblendAuth();
+      if (!CURRENT_SESSION) return;
+
+      setupSellerFilterHeader();
+      await loadContactsFromD1();
+    });
+
+    function setupSellerFilterHeader() {
+      const masterSel = document.getElementById('masterSellerSelector');
+      const restrictedBadge = document.getElementById('sellerRestrictedBadge');
+
+      if (CURRENT_SESSION.role === 'admin') {
+        masterSel.style.display = 'flex';
+        restrictedBadge.style.display = 'none';
+      } else {
+        masterSel.style.display = 'none';
+        restrictedBadge.style.display = 'flex';
+        document.getElementById('sellerLockedName').textContent = `Atendimentos de ${CURRENT_SESSION.name}`;
+        CURRENT_SELLER_FILTER = CURRENT_SESSION.id; // Trava imediata de vendedor
+      }
+    }
+
+    function filterBySeller(sellerId) {
+      if (CURRENT_SESSION.role !== 'admin') return;
+      CURRENT_SELLER_FILTER = sellerId;
+      document.querySelectorAll('.seller-pill').forEach(p => p.classList.remove('active'));
+      const activeBtn = document.querySelector(`.seller-pill[onclick*="'${sellerId}'"]`);
+      if (activeBtn) activeBtn.classList.add('active');
+      applyContactsFilter();
+    }
+
+    async function loadContactsFromD1() {
+      const sql = "SELECT * FROM festblend_contacts ORDER BY updated_at DESC;";
+      ALL_CONTACTS = await queryD1(sql);
+      applyContactsFilter();
+    }
+
+    function applyContactsFilter() {
+      let filtered = [...ALL_CONTACTS];
+
+      // Se for vendedor, filtrar estritamente pelos atribuídos a ele
+      if (CURRENT_SESSION.role !== 'admin') {
+        filtered = filtered.filter(c => c.assigned_to === CURRENT_SESSION.id);
+      } else if (CURRENT_SELLER_FILTER !== 'all') {
+        filtered = filtered.filter(c => c.assigned_to === CURRENT_SELLER_FILTER);
+      }
+
+      const term = document.getElementById('searchInput').value.toLowerCase().trim();
+      if (term) {
+        filtered = filtered.filter(c => 
+          (c.name && c.name.toLowerCase().includes(term)) ||
+          (c.phone && c.phone.includes(term)) ||
+          (c.event_location && c.event_location.toLowerCase().includes(term)) ||
+          (c.event_type && c.event_type.toLowerCase().includes(term))
+        );
+      }
+
+      FILTERED_CONTACTS = filtered;
+      renderChatList();
+
+      if (FILTERED_CONTACTS.length > 0) {
+        if (!ACTIVE_CONTACT || !FILTERED_CONTACTS.some(c => c.phone === ACTIVE_CONTACT.phone)) {
+          selectContact(FILTERED_CONTACTS[0]);
+        }
+      }
+    }
+
+    function handleSearch() {
+      applyContactsFilter();
+    }
+
+    function renderChatList() {
+      const container = document.getElementById('chatListContainer');
+      container.innerHTML = '';
+
+      if (FILTERED_CONTACTS.length === 0) {
+        container.innerHTML = `
+          <div style="padding: 30px; text-align: center; color: var(--text-muted); font-size: 0.8rem;">
+            Nenhum contato encontrado para esta seleção.
+          </div>`;
+        return;
+      }
+
+      FILTERED_CONTACTS.forEach(c => {
+        const isActive = ACTIVE_CONTACT && ACTIVE_CONTACT.phone === c.phone;
+        const li = document.createElement('li');
+        li.className = `chat-item-card ${isActive ? 'active' : ''}`;
+        li.onclick = () => selectContact(c);
+
+        li.innerHTML = `
+          <div class="chat-avatar-wrap">
+            <img src="${c.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'}" alt="${c.name}" class="chat-avatar">
+            <div class="chat-online-dot"></div>
+          </div>
+          <div class="chat-info">
+            <div class="chat-header-row">
+              <span class="chat-name">${c.name || formatPhoneDisplay(c.phone)}</span>
+              <span class="chat-time">${c.event_date ? c.event_date.slice(5) : ''}</span>
+            </div>
+            <div class="chat-preview-row">
+              <span class="chat-preview-text">${c.event_location || 'Cuiabá MT'}</span>
+              <span class="chat-event-badge">${c.event_type || 'Evento'}</span>
+            </div>
+          </div>
+        `;
+        container.appendChild(li);
+      });
+    }
+
+    async function selectContact(contact) {
+      ACTIVE_CONTACT = contact;
+      renderChatList();
+
+      // Atualizar Header da Coluna Central
+      document.getElementById('activeLeadName').textContent = contact.name;
+      document.getElementById('activeLeadPhone').textContent = formatPhoneDisplay(contact.phone);
+      document.getElementById('activeLeadAvatar').src = contact.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150';
+      document.getElementById('activeLeadEventBadge').textContent = contact.event_type || 'Evento 360';
+
+      // Atualizar Ficha Lateral
+      document.getElementById('panelLeadName').textContent = contact.name;
+      document.getElementById('panelLeadPhone').textContent = formatPhoneDisplay(contact.phone);
+      document.getElementById('panelLeadAvatar').src = contact.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150';
+      document.getElementById('fieldEventType').value = contact.event_type || 'Casamento';
+      document.getElementById('fieldEventDate').value = contact.event_date || '';
+      document.getElementById('fieldEventLocation').value = contact.event_location || '';
+      document.getElementById('fieldGuestCount').value = contact.guest_count || '';
+      document.getElementById('fieldMenuType').value = contact.menu_type || '';
+      document.getElementById('fieldDealStage').value = contact.deal_stage || 'data_consultada';
+      document.getElementById('fieldDealValue').value = contact.deal_value || '';
+      document.getElementById('fieldDownPayment').value = contact.down_payment || '';
+      document.getElementById('fieldAssignedTo').value = contact.assigned_to || 'eduardo';
+      document.getElementById('fieldNotes').value = contact.notes || '';
+
+      updateCountdownFromDate();
+      await loadConversationMessages(contact.phone);
+    }
+
+    function updateCountdownFromDate() {
+      const dateVal = document.getElementById('fieldEventDate').value;
+      if (!dateVal) {
+        document.getElementById('countdownMainText').textContent = 'Data não definida';
+        document.getElementById('countdownSubText').textContent = 'Selecione uma data para o cálculo';
+        return;
+      }
+
+      const eventDate = new Date(dateVal + 'T00:00:00');
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const diffTime = eventDate - today;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      const dateBR = dateVal.split('-').reverse().join('/');
+      document.getElementById('countdownMainText').textContent = `Data do Evento: ${dateBR}`;
+
+      if (diffDays > 0) {
+        document.getElementById('countdownSubText').textContent = `Faltam ${diffDays} dias para o evento`;
+      } else if (diffDays === 0) {
+        document.getElementById('countdownSubText').textContent = `O evento acontece HOJE em Cuiabá!`;
+      } else {
+        document.getElementById('countdownSubText').textContent = `Evento realizado há ${Math.abs(diffDays)} dias`;
+      }
+    }
+
+    async function loadConversationMessages(phone) {
+      const container = document.getElementById('messagesStream');
+      container.innerHTML = `
+        <div style="text-align:center;padding:20px;color:var(--text-muted);font-size:0.8rem;">
+          Carregando mensagens da Cloudflare D1...
+        </div>`;
+
+      const cleanPhone = normalizePhone(phone);
+      const sql = "SELECT * FROM festblend_conversations WHERE phone = ? OR remote_jid LIKE ? ORDER BY created_at ASC;";
+      const rows = await queryD1(sql, [cleanPhone, `%${cleanPhone}%`]);
+
+      container.innerHTML = '';
+      if (!rows || rows.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center;padding:40px;color:var(--text-muted);font-size:0.85rem;">
+            Nenhuma mensagem registrada no Cloudflare D1 para este atendimento.
+          </div>`;
+        return;
+      }
+
+      rows.forEach(msg => {
+        const isOut = msg.direction === 'OUT';
+        const rowDiv = document.createElement('div');
+        rowDiv.className = `message-row ${isOut ? 'out' : 'in'}`;
+
+        let mediaHtml = '';
+        if (msg.media_type === 'audio' && msg.media_url) {
+          mediaHtml = `
+            <div class="audio-player-card">
+              <div class="audio-controls-row">
+                <button class="btn-play-audio" onclick="togglePlayAudio(this, '${msg.media_url}')">
+                  <i data-lucide="play" style="width: 16px; height: 16px;"></i>
+                </button>
+                <div class="audio-waveform-bar">
+                  <div class="audio-progress-fill"></div>
+                </div>
+                <span style="font-size:0.7rem;color:var(--gold-light);font-family:var(--font-mono);">0:14</span>
+              </div>
+              ${msg.audio_transcription ? `<div class="audio-transcription-box">"${msg.audio_transcription}"</div>` : ''}
+            </div>
+          `;
+        }
+
+        rowDiv.innerHTML = `
+          <div class="message-bubble">
+            <div class="message-sender-name">${msg.sender || (isOut ? 'Festblend' : 'Cliente')}</div>
+            ${mediaHtml}
+            <div>${msg.message || ''}</div>
+            <div class="message-time-meta">
+              <span>${msg.created_at ? msg.created_at.slice(11, 16) : ''}</span>
+              ${isOut ? '<i data-lucide="check-check" style="width: 13px; height: 13px; color: var(--gold-primary);"></i>' : ''}
+            </div>
+          </div>
+        `;
+        container.appendChild(rowDiv);
+      });
+
+      lucide.createIcons();
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function togglePlayAudio(btn, audioUrl) {
+      let audio = btn._audioInstance;
+      if (!audio) {
+        audio = new Audio(audioUrl);
+        btn._audioInstance = audio;
+        audio.onended = () => {
+          btn.innerHTML = '<i data-lucide="play" style="width: 16px; height: 16px;"></i>';
+          lucide.createIcons();
+        };
+      }
+
+      if (audio.paused) {
+        audio.play();
+        btn.innerHTML = '<i data-lucide="pause" style="width: 16px; height: 16px;"></i>';
+      } else {
+        audio.pause();
+        btn.innerHTML = '<i data-lucide="play" style="width: 16px; height: 16px;"></i>';
+      }
+      lucide.createIcons();
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById('messageInput');
+      const text = input.value.trim();
+      if (!text || !ACTIVE_CONTACT) return;
+
+      input.value = '';
+      const cleanPhone = normalizePhone(ACTIVE_CONTACT.phone);
+
+      // Inserir mensagem no D1
+      const sql = `INSERT INTO festblend_conversations 
+        (remote_jid, phone, push_name, sender, message, direction, assigned_to)
+        VALUES (?, ?, ?, ?, ?, 'OUT', ?);`;
+
+      await queryD1(sql, [
+        ACTIVE_CONTACT.remote_jid || `${cleanPhone}@s.whatsapp.net`,
+        cleanPhone,
+        ACTIVE_CONTACT.name,
+        CURRENT_SESSION.name,
+        text,
+        ACTIVE_CONTACT.assigned_to || 'eduardo'
+      ]);
+
+      await loadConversationMessages(cleanPhone);
+    }
+
+    function handleKeySend(e) {
+      if (e.key === 'Enter') {
+        sendMessage();
+      }
+    }
+
+    async function saveLeadDetailsD1() {
+      if (!ACTIVE_CONTACT) return;
+
+      const btn = document.getElementById('btnSaveD1');
+      btn.innerHTML = '<i data-lucide="loader" style="width: 15px; height: 15px;"></i> Salvando no D1...';
+
+      const eventType = document.getElementById('fieldEventType').value;
+      const eventDate = document.getElementById('fieldEventDate').value;
+      const eventLocation = document.getElementById('fieldEventLocation').value;
+      const guestCount = parseInt(document.getElementById('fieldGuestCount').value, 10) || 0;
+      const menuType = document.getElementById('fieldMenuType').value;
+      const dealStage = document.getElementById('fieldDealStage').value;
+      const dealValue = parseFloat(document.getElementById('fieldDealValue').value) || 0.0;
+      const downPayment = parseFloat(document.getElementById('fieldDownPayment').value) || 0.0;
+      const assignedTo = document.getElementById('fieldAssignedTo').value;
+      const notes = document.getElementById('fieldNotes').value;
+
+      const sql = `UPDATE festblend_contacts SET 
+        event_type = ?, event_date = ?, event_location = ?, guest_count = ?,
+        menu_type = ?, deal_stage = ?, deal_value = ?, down_payment = ?,
+        assigned_to = ?, notes = ?, updated_at = CURRENT_TIMESTAMP
+        WHERE phone = ?;`;
+
+      await queryD1(sql, [
+        eventType, eventDate, eventLocation, guestCount,
+        menuType, dealStage, dealValue, downPayment,
+        assignedTo, notes, ACTIVE_CONTACT.phone
+      ]);
+
+      // Atualizar também o card de pipeline correspondente
+      const sqlCard = `UPDATE festblend_pipeline_cards SET 
+        event_type = ?, event_date = ?, guest_count = ?, stage = ?,
+        deal_value = ?, assigned_to = ?, observations = ?, updated_at = CURRENT_TIMESTAMP
+        WHERE phone = ?;`;
+
+      await queryD1(sqlCard, [
+        eventType, eventDate, guestCount, dealStage,
+        dealValue, assignedTo, notes, ACTIVE_CONTACT.phone
+      ]);
+
+      btn.innerHTML = '<i data-lucide="check-circle" style="width: 15px; height: 15px;"></i> D1 Sincronizado!';
+      setTimeout(() => {
+        btn.innerHTML = '<i data-lucide="save" style="width: 15px; height: 15px;"></i> Salvar no Cloudflare D1';
+        lucide.createIcons();
+      }, 2000);
+
+      await loadContactsFromD1();
+    }
+
+    function openWhatsAppDirect() {
+      if (!ACTIVE_CONTACT) return;
+      const clean = normalizePhone(ACTIVE_CONTACT.phone);
+      window.open(`https://web.whatsapp.com/send?phone=${clean}`, '_blank');
+    }
+
+    function exportChatTxt() {
+      if (!ACTIVE_CONTACT) return;
+      alert(`Histórico de ${ACTIVE_CONTACT.name} preparado para auditoria D1.`);
+    }
+  </script>
+</body>
+</html>

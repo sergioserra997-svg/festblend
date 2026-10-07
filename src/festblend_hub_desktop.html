@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="pt-br" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Festblend Cuiabá 360 · Central de Gestão Comercial & Bar para Eventos</title>
+  <meta name="description" content="Hub Festblend · Gestão de Leads, Noivas, Degustações e Agenda de Eventos">
+
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/theme.css">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="js/auth.js"></script>
+
+  <style>
+    body {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+      background: var(--bg-deep);
+    }
+
+    /* Sidebar Navigation */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: var(--bg-surface);
+      border-right: 1px solid var(--card-border);
+      display: flex;
+      flex-direction: column;
+      padding: 20px 14px;
+      flex-shrink: 0;
+      z-index: 100;
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 6px 8px 18px 8px;
+      border-bottom: 1px solid var(--card-border);
+      margin-bottom: 14px;
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--gold-subtle);
+      border: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold-primary);
+      flex-shrink: 0;
+    }
+
+    .brand-text h1 {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      font-weight: 800;
+      background: var(--gold-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.2;
+    }
+
+    .brand-text p {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    .nav-section-title {
+      font-size: 0.65rem;
+      font-weight: 800;
+      color: var(--gold-primary);
+      text-transform: uppercase;
+      letter-spacing: 1.3px;
+      margin: 14px 8px 6px 8px;
+    }
+
+    .nav-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      list-style: none;
+    }
+
+    .nav-item button {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-sub);
+      font-family: var(--font-sans);
+      font-size: 0.83rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+      transition: var(--transition-smooth);
+    }
+
+    .nav-item button:hover {
+      background: var(--gold-subtle);
+      color: var(--text-main);
+      border-color: var(--card-border-hover);
+    }
+
+    .nav-item button.active {
+      background: var(--gold-subtle);
+      color: var(--gold-light);
+      border-color: var(--gold-primary);
+      box-shadow: 0 0 15px var(--gold-glow);
+    }
+
+    .nav-item button i {
+      width: 17px;
+      height: 17px;
+      flex-shrink: 0;
+      color: var(--text-muted);
+      transition: var(--transition-smooth);
+    }
+
+    .nav-item button.active i, .nav-item button:hover i {
+      color: var(--gold-primary);
+    }
+
+    /* Sidebar Footer User */
+    .sidebar-user {
+      margin-top: auto;
+      padding: 12px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid var(--card-border);
+    }
+
+    .user-details {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .user-name {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .user-role-badge {
+      font-size: 0.65rem;
+      color: var(--gold-primary);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-logout {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 6px;
+      display: flex;
+      align-items: center;
+      transition: color 0.2s;
+    }
+
+    .btn-logout:hover {
+      color: var(--red);
+    }
+
+    /* Main Content Wrapper */
+    .main-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .top-bar {
+      height: 64px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      flex-shrink: 0;
+    }
+
+    .page-info h2 {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .page-info p {
+      font-size: 0.73rem;
+      color: var(--text-sub);
+    }
+
+    .top-bar-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--gold-light);
+      font-family: var(--font-mono);
+      letter-spacing: 0.5px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 10px var(--green);
+    }
+
+    .content-area {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      background: var(--bg-deep);
+    }
+
+    #main-frame {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SIDEBAR NAVEGAÇÃO -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">
+        <i data-lucide="wine" style="width: 20px; height: 20px;"></i>
+      </div>
+      <div class="brand-text">
+        <h1>Festblend Cuiabá</h1>
+        <p>Gestão & Coquetelaria 360°</p>
+      </div>
+    </div>
+
+    <!-- DIRETORIA & VISÃO MASTER (RESTRITO ADMIN) -->
+    <div class="nav-section-title" data-role-restrict="admin">Diretoria & Auditoria</div>
+    <ul class="nav-menu" data-role-restrict="admin">
+      <li class="nav-item">
+        <button onclick="loadModule('festblend_mod_dono.html', this, 'Painel do Dono · Radar de Eventos & Auditoria Master')">
+          <i data-lucide="shield-check"></i> Painel do Dono & Radar
+        </button>
+      </li>
+    </ul>
+
+    <!-- ATENDIMENTO & WHATSAPP -->
+    <div class="nav-section-title">Comunicação & Mensageria</div>
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <button class="active" onclick="loadModule('festblend_mod_chats.html', this, 'Central de Conversas WhatsApp Evolution')">
+          <i data-lucide="message-square"></i> Central de Conversas
+        </button>
+      </li>
+    </ul>
+
+    <!-- COMERCIAL & FUNIL DE EVENTOS -->
+    <div class="nav-section-title">Comercial & Eventos</div>
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <button onclick="loadModule('festblend_mod_kanban.html', this, 'Pipeline CRM & Funil de Eventos')">
+          <i data-lucide="kanban"></i> Pipeline de Eventos
+        </button>
+      </li>
+      <li class="nav-item">
+        <button onclick="loadModule('festblend_mod_calendar.html', this, 'Radar de Datas & Disponibilidade de Agenda')">
+          <i data-lucide="calendar"></i> Radar de Datas
+        </button>
+      </li>
+      <li class="nav-item">
+        <button onclick="loadModule('festblend_mod_cardapio.html', this, 'Cardápio Digital & Calculadora de Drinks')">
+          <i data-lucide="cocktail"></i> Cardápio & Drinks
+        </button>
+      </li>
+    </ul>
+
+    <!-- CONFIGURAÇÕES -->
+    <div class="nav-section-title">Sistema & Infraestrutura</div>
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <button onclick="loadModule('festblend_mod_settings.html', this, 'Configurações de Conexão WhatsApp & Equipe')">
+          <i data-lucide="settings"></i> Configurações & Celular
+        </button>
+      </li>
+    </ul>
+
+    <!-- PERFIL DO USUÁRIO LOGADO -->
+    <div class="sidebar-user">
+      <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" alt="Avatar" id="userAvatar" class="user-avatar">
+      <div class="user-details">
+        <div class="user-name" id="userName">Eduardo Almeida</div>
+        <div class="user-role-badge" id="userRole">Diretoria Geral</div>
+      </div>
+      <button class="btn-logout" onclick="festblendLogout()" title="Sair do Sistema">
+        <i data-lucide="log-out" style="width: 17px; height: 17px;"></i>
+      </button>
+    </div>
+  </aside>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="main-wrapper">
+    <header class="top-bar">
+      <div class="page-info">
+        <h2 id="pageTitle">Central de Conversas WhatsApp Evolution</h2>
+        <p id="pageSubtitle">Acompanhamento em Tempo Real · Atendimento de Noivas e Eventos Cuiabá</p>
+      </div>
+
+      <div class="top-bar-actions">
+        <div class="status-badge">
+          <div class="status-dot"></div>
+          FESTBLENDCRM.AISECOMPANY.COM.BR · CLOUDFLARE D1
+        </div>
+      </div>
+    </header>
+
+    <div class="content-area">
+      <iframe id="main-frame" src="festblend_mod_chats.html"></iframe>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    // Validação de Sessão
+    const session = checkFestblendAuth();
+    if (session) {
+      document.getElementById('userName').textContent = session.name;
+      document.getElementById('userRole').textContent = session.title || (session.role === 'admin' ? 'Diretor Geral' : 'Closer Especialista');
+      if (session.avatar) {
+        document.getElementById('userAvatar').src = session.avatar;
+      }
+
+      // Se for admin, iniciar no Painel do Dono ou na Central de Conversas
+      if (session.role === 'admin') {
+        const donoBtn = document.querySelector('button[onclick*="festblend_mod_dono.html"]');
+        if (donoBtn) {
+          document.querySelectorAll('.nav-item button').forEach(b => b.classList.remove('active'));
+          donoBtn.classList.add('active');
+          document.getElementById('main-frame').src = 'festblend_mod_dono.html';
+          document.getElementById('pageTitle').textContent = 'Painel do Dono · Radar de Eventos & Auditoria Master';
+          document.getElementById('pageSubtitle').textContent = 'Métricas Vitais de Vendas, Travas de Agenda e Desempenho da Equipe';
+        }
+      }
+    }
+
+    function loadModule(url, buttonEl, title) {
+      document.querySelectorAll('.nav-item button').forEach(b => b.classList.remove('active'));
+      if (buttonEl) buttonEl.classList.add('active');
+      document.getElementById('main-frame').src = url;
+      if (title) {
+        document.getElementById('pageTitle').textContent = title;
+        document.getElementById('pageSubtitle').textContent = 'Festblend Cuiabá 360 · Sistema Integrado Cloudflare D1';
+      }
+    }
+  </script>
+</body>
+</html>

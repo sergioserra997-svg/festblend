@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="pt-br" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Painel do Dono · Radar de Eventos & Travas de Agenda · Festblend Cuiabá 360</title>
+
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/theme.css">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/d1_client.js"></script>
+
+  <style>
+    body {
+      background: var(--bg-deep);
+      padding: 24px;
+      overflow-y: auto;
+    }
+
+    .dono-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .dono-title-group h2 {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: var(--gold-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 4px;
+    }
+
+    .dono-title-group p {
+      font-size: 0.8rem;
+      color: var(--text-sub);
+    }
+
+    /* KPI Summary Cards Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .kpi-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--gold-gradient);
+    }
+
+    .kpi-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .kpi-card-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+    }
+
+    .kpi-card-icon {
+      color: var(--gold-primary);
+    }
+
+    .kpi-card-val {
+      font-family: var(--font-mono);
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .kpi-card-meta {
+      font-size: 0.72rem;
+      color: var(--green);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Radar Section: Dates in Risk */
+    .section-container {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .section-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Luxury Table */
+    .luxury-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    .luxury-table th {
+      background: #0d0d12;
+      padding: 12px 14px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: var(--gold-light);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .luxury-table td {
+      padding: 14px;
+      font-size: 0.82rem;
+      color: var(--text-main);
+      border-bottom: 1px solid rgba(197, 160, 89, 0.08);
+    }
+
+    .luxury-table tr:hover td {
+      background: rgba(197, 160, 89, 0.04);
+    }
+
+    .seller-avatar-cell {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .seller-avatar-img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid var(--card-border);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER EXECUTIVO -->
+  <header class="dono-header">
+    <div class="dono-title-group">
+      <h2>Painel do Dono & Radar de Eventos 360°</h2>
+      <p>Visão Executiva Privativa de Eduardo Almeida · Monitoramento de Datas, Travas e Performance</p>
+    </div>
+
+    <div class="badge-gold">
+      <i data-lucide="shield-check" style="width: 14px; height: 14px;"></i>
+      ACESSO MASTER · DIRETORIA
+    </div>
+  </header>
+
+  <!-- GRID DE MÉTRICAS VITAIS -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-card-top">
+        <span class="kpi-card-label">Faturamento Fechado (Mês)</span>
+        <i data-lucide="dollar-sign" class="kpi-card-icon" style="width: 18px; height: 18px;"></i>
+      </div>
+      <div class="kpi-card-val" id="kpiClosedTotal">R$ 38.000,00</div>
+      <div class="kpi-card-meta">
+        <i data-lucide="trending-up" style="width: 13px; height: 13px;"></i>
+        <span>Contratos formalizados com sinal</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-card-top">
+        <span class="kpi-card-label">Volume em Negociação</span>
+        <i data-lucide="briefcase" class="kpi-card-icon" style="width: 18px; height: 18px;"></i>
+      </div>
+      <div class="kpi-card-val" id="kpiNegotiatingTotal">R$ 58.000,00</div>
+      <div class="kpi-card-meta">
+        <i data-lucide="clock" style="width: 13px; height: 13px;"></i>
+        <span>5 eventos em fase de fechamento</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-card-top">
+        <span class="kpi-card-label">Ticket Médio por Evento</span>
+        <i data-lucide="award" class="kpi-card-icon" style="width: 18px; height: 18px;"></i>
+      </div>
+      <div class="kpi-card-val" id="kpiAvgTicket">R$ 15.200,00</div>
+      <div class="kpi-card-meta">
+        <span>Coquetelaria completa & Bar 360</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-card-top">
+        <span class="kpi-card-label">Datas em Alerta de Risco</span>
+        <i data-lucide="alert-triangle" style="width: 18px; height: 18px; color: var(--red);"></i>
+      </div>
+      <div class="kpi-card-val" style="color: #fca5a5;" id="kpiRiskDatesCount">2 Datas</div>
+      <div class="kpi-card-meta" style="color: #fca5a5;">
+        <span>Finais de semana cobiçados sem sinal</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RADAR DE DATAS & ALERTAS DE EVENTOS SEM FECHAR (A DOR CENTRAL DE DUDU) -->
+  <section class="section-container">
+    <div class="section-header-row">
+      <h3 class="section-title">
+        <i data-lucide="bell" style="width: 18px; height: 18px; color: var(--gold-primary);"></i>
+        Radar de Datas & Alertas de Eventos sem Fechar
+      </h3>
+      <span class="badge-risk">Ação Comercial Imediata</span>
+    </div>
+
+    <table class="luxury-table">
+      <thead>
+        <tr>
+          <th>Data do Evento</th>
+          <th>Lead / Contato</th>
+          <th>Espaço / Buffet</th>
+          <th>Status da Agenda</th>
+          <th>Vendedor</th>
+          <th>Tempo em Aberto</th>
+          <th>Ação do Dono</th>
+        </tr>
+      </thead>
+      <tbody id="riskDatesTableBody">
+        <tr>
+          <td><strong style="color:var(--gold-light);">24/10/2026 (Sábado)</strong></td>
+          <td>Beatriz Faria (Noiva Espaço Ágora)</td>
+          <td>Espaço Ágora · Cuiabá</td>
+          <td><span class="badge-risk">Data em Risco Crítico</span></td>
+          <td>Larissa Vasconcelos</td>
+          <td>4 dias sem retorno</td>
+          <td>
+            <button class="btn-luxury" style="padding:4px 10px;font-size:0.7rem;" onclick="alert('Notificação enviada para Larissa acionar a noiva Beatriz com condição de bloqueio de 24h.')">
+              Cobrar Vendedor
+            </button>
+          </td>
+        </tr>
+
+        <tr>
+          <td><strong style="color:var(--gold-light);">14/11/2026 (Sábado)</strong></td>
+          <td>Amanda Silveira (Noiva Leila Malouf)</td>
+          <td>Buffet Leila Malouf</td>
+          <td><span class="badge-gold">Reserva Temporária</span></td>
+          <td>Larissa Vasconcelos</td>
+          <td>2 dias em análise</td>
+          <td>
+            <button class="btn-outline" style="padding:4px 10px;font-size:0.7rem;" onclick="alert('Contrato em elaboração com entrada de R$ 3.000,00.')">
+              Ver Contrato
+            </button>
+          </td>
+        </tr>
+
+        <tr>
+          <td><strong style="color:var(--gold-light);">21/11/2026 (Sábado)</strong></td>
+          <td>Data Vaga · 2 consultas de noivas</td>
+          <td>Buffets Diversos</td>
+          <td><span class="badge-gold" style="color:#60a5fa;border-color:#60a5fa;">Sábado Disponível</span></td>
+          <td>Eduardo Almeida</td>
+          <td>Aguardando proposta</td>
+          <td>
+            <button class="btn-luxury" style="padding:4px 10px;font-size:0.7rem;" onclick="alert('Iniciando disparador de propostas para noivas da lista de espera do dia 21/11.')">
+              Ocupar Data
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- PERFORMANCE DA EQUIPE DE CLOSERS -->
+  <section class="section-container">
+    <div class="section-header-row">
+      <h3 class="section-title">
+        <i data-lucide="users" style="width: 18px; height: 18px; color: var(--gold-primary);"></i>
+        Desempenho da Equipe Comercial & Atendimento
+      </h3>
+      <span class="badge-gold">Auditoria em Tempo Real D1</span>
+    </div>
+
+    <table class="luxury-table">
+      <thead>
+        <tr>
+          <th>Closer Responsável</th>
+          <th>Especialidade</th>
+          <th>Leads Atribuídos</th>
+          <th>Propostas Enviadas</th>
+          <th>Contratos Fechados</th>
+          <th>Taxa de Conversão</th>
+          <th>Tempo Médio Resposta</th>
+          <th>Auditar Conversas</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="seller-avatar-cell">
+              <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150" alt="Larissa" class="seller-avatar-img">
+              <div>
+                <strong>Larissa Vasconcelos</strong>
+                <div style="font-size:0.7rem;color:var(--text-muted);">larissa@festblend.com.br</div>
+              </div>
+            </div>
+          </td>
+          <td>Noivas & Casamentos Cuiabá</td>
+          <td><strong>18</strong></td>
+          <td>14</td>
+          <td><strong style="color:var(--green);">6 Fechados</strong></td>
+          <td><span class="badge-success">42.8%</span></td>
+          <td><span style="font-family:var(--font-mono);">2,2 min</span></td>
+          <td>
+            <button class="btn-outline" style="padding:4px 10px;font-size:0.7rem;" onclick="parent.loadModule('festblend_mod_chats.html', null, 'Central de Atendimentos WhatsApp');">
+              Ver Chats
+            </button>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <div class="seller-avatar-cell">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150" alt="Matheus" class="seller-avatar-img">
+              <div>
+                <strong>Matheus Peixoto</strong>
+                <div style="font-size:0.7rem;color:var(--text-muted);">matheus@festblend.com.br</div>
+              </div>
+            </div>
+          </td>
+          <td>Corporativo & Debutantes 15 Anos</td>
+          <td><strong>14</strong></td>
+          <td>10</td>
+          <td><strong style="color:var(--green);">4 Fechados</strong></td>
+          <td><span class="badge-success">40.0%</span></td>
+          <td><span style="font-family:var(--font-mono);">3,1 min</span></td>
+          <td>
+            <button class="btn-outline" style="padding:4px 10px;font-size:0.7rem;" onclick="parent.loadModule('festblend_mod_chats.html', null, 'Central de Atendimentos WhatsApp');">
+              Ver Chats
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <script>
+    lucide.createIcons();
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const session = checkFestblendAuth('admin');
+      if (!session) return;
+    });
+  </script>
+</body>
+</html>

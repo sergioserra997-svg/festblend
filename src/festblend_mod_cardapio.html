@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="pt-br" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Cardápio Digital & Calculadora de Drinks · Festblend Cuiabá 360</title>
+
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/theme.css">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="js/auth.js"></script>
+
+  <style>
+    body {
+      background: var(--bg-deep);
+      padding: 24px;
+      overflow-y: auto;
+    }
+
+    .cardapio-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .c-title-group h2 {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .c-title-group p {
+      font-size: 0.8rem;
+      color: var(--text-sub);
+    }
+
+    .calculator-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 28px;
+    }
+
+    .calc-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .calc-input-group label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--gold-light);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .calc-input-group input, .calc-input-group select {
+      width: 100%;
+      background: #0a0a0e;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      outline: none;
+    }
+
+    .calc-results-box {
+      background: #0d0d12;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 18px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      text-align: center;
+    }
+
+    .res-label {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .res-val {
+      font-family: var(--font-mono);
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--gold-light);
+    }
+
+    /* Menu Drinks Showcase */
+    .drinks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .drink-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: var(--transition-smooth);
+    }
+
+    .drink-card:hover {
+      border-color: var(--gold-primary);
+      transform: translateY(-2px);
+    }
+
+    .drink-name {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .drink-ingredients {
+      font-size: 0.75rem;
+      color: var(--text-sub);
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="cardapio-header">
+    <div class="c-title-group">
+      <h2>Cardápio Digital & Calculadora de Insumos</h2>
+      <p>Dimensionamento Preciso de Bartenders, Garrafas e Estrutura por Número de Convidados</p>
+    </div>
+
+    <button class="btn-luxury" onclick="generateProposalText()">
+      <i data-lucide="share-2" style="width: 14px; height: 14px;"></i>
+      Copiar Proposta WhatsApp
+    </button>
+  </header>
+
+  <!-- CALCULADORA DE DIMENSIONAMENTO -->
+  <section class="calculator-card">
+    <h3 style="font-family:var(--font-serif);font-size:1.1rem;margin-bottom:14px;color:var(--text-main);">
+      Simulador de Dimensionamento de Evento
+    </h3>
+
+    <div class="calc-grid">
+      <div class="calc-input-group">
+        <label>Quantidade de Convidados</label>
+        <input type="number" id="calcGuests" value="250" oninput="calculateSupplies()">
+      </div>
+
+      <div class="calc-input-group">
+        <label>Duração do Open Bar</label>
+        <select id="calcHours" onchange="calculateSupplies()">
+          <option value="5">5 Horas de Festa</option>
+          <option value="6" selected>6 Horas de Festa (Padrão Casamento)</option>
+          <option value="7">7 Horas de Festa</option>
+        </select>
+      </div>
+
+      <div class="calc-input-group">
+        <label>Formato de Bar Contratado</label>
+        <select id="calcFormat" onchange="calculateSupplies()">
+          <option value="premium">Bar Premium 360 (Gin + Moscow + Clássicos)</option>
+          <option value="teen_adulto">Duplo (Bar Teen Sem Álcool + Adulto)</option>
+          <option value="full_chopp">Full Open Bar (Chopp + Drinks + Espumante)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="calc-results-box">
+      <div>
+        <div class="res-label">Equipe Recomendada</div>
+        <div class="res-val" id="resBartenders">4 Bartenders</div>
+      </div>
+      <div>
+        <div class="res-label">Garrafas de Destilados</div>
+        <div class="res-val" id="resBottles">32 Garrafas</div>
+      </div>
+      <div>
+        <div class="res-label">Gelo Cristalino</div>
+        <div class="res-val" id="resIce">240 kg</div>
+      </div>
+      <div>
+        <div class="res-label">Orçamento Estimado</div>
+        <div class="res-val" id="resEstimate">R$ 14.800,00</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CARTA DE DRINKS DA FESTBLEND -->
+  <h3 style="font-family:var(--font-serif);font-size:1.2rem;margin-bottom:14px;color:var(--text-main);">
+    Carta Canônica de Drinks Festblend Cuiabá
+  </h3>
+
+  <div class="drinks-grid">
+    <div class="drink-card">
+      <div class="drink-name">
+        <span>Moscow Mule Cuiabano</span>
+        <span class="badge-gold">Top 1 Noivas</span>
+      </div>
+      <div class="drink-ingredients">
+        Vodka premium, suco de limão taiti fresco, xarope de gengibre artesanal e espuma aveludada de gengibre na clássica caneca de cobre martelada.
+      </div>
+    </div>
+
+    <div class="drink-card">
+      <div class="drink-name">
+        <span>Gin Tônica Frutas Vermelhas</span>
+        <span class="badge-gold">Clássico</span>
+      </div>
+      <div class="drink-ingredients">
+        Gin artesanal London Dry, infusão de frutas vermelhas maceradas, água tônica botânica e ramo de alecrim tostado para aromatização.
+      </div>
+    </div>
+
+    <div class="drink-card">
+      <div class="drink-name">
+        <span>Aperol Spritz Veneziano</span>
+        <span class="badge-gold">Sofisticado</span>
+      </div>
+      <div class="drink-ingredients">
+        Aperol italiano, espumante Prosecco Brut gelado, splash de água com gás e fatia de laranja bahia fresca servida em taça de cristal.
+      </div>
+    </div>
+
+    <div class="drink-card">
+      <div class="drink-name">
+        <span>Caipirinha Gourmet do Cerrado</span>
+        <span class="badge-gold">Regional MT</span>
+      </div>
+      <div class="drink-ingredients">
+        Cachaça artesanal ou vodka premium, seleção de frutas tropicais (caju, maracujá, morango e tangerina) com açúcar demerara orgânico.
+      </div>
+    </div>
+
+    <div class="drink-card">
+      <div class="drink-name">
+        <span>Sunset Tropical (Mocktail)</span>
+        <span class="badge-gold">Sem Álcool</span>
+      </div>
+      <div class="drink-ingredients">
+        Suco de maracujá natural, xarope de grenadine artesanal, suco de laranja da terra e espumante sem álcool. Especial para debutantes e convidados sem álcool.
+      </div>
+    </div>
+
+    <div class="drink-card">
+      <div class="drink-name">
+        <span>Fitzgerald Festblend</span>
+        <span class="badge-gold">Autoral</span>
+      </div>
+      <div class="drink-ingredients">
+        Gin premium, xarope de açúcar simples, suco de limão siciliano e gotas de Angostura bitters clássico. Coquetel refinado com acabamento cítrico marcante.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+    checkFestblendAuth();
+
+    function calculateSupplies() {
+      const guests = parseInt(document.getElementById('calcGuests').value, 10) || 100;
+      const hours = parseInt(document.getElementById('calcHours').value, 10) || 6;
+      const fmt = document.getElementById('calcFormat').value;
+
+      // Cálculo de bartenders (1 para cada 60 convidados)
+      const bartenders = Math.max(2, Math.ceil(guests / 60));
+      document.getElementById('resBartenders').textContent = `${bartenders} Bartenders`;
+
+      // Garrafas (aprox 1 garrafa para cada 7.5 convidados em 6h)
+      const bottles = Math.ceil(guests / 7.5 * (hours / 6));
+      document.getElementById('resBottles').textContent = `${bottles} Garrafas`;
+
+      // Gelo (aprox 1kg por convidado)
+      const ice = Math.round(guests * 0.95);
+      document.getElementById('resIce').textContent = `${ice} kg`;
+
+      // Estimativa financeira
+      let pricePerGuest = 58;
+      if (fmt === 'teen_adulto') pricePerGuest = 62;
+      if (fmt === 'full_chopp') pricePerGuest = 72;
+
+      const total = guests * pricePerGuest;
+      document.getElementById('resEstimate').textContent = `R$ ${total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+    }
+
+    function generateProposalText() {
+      const guests = document.getElementById('calcGuests').value;
+      const total = document.getElementById('resEstimate').textContent;
+      const bts = document.getElementById('resBartenders').textContent;
+
+      const text = `🍸 *PROPOSTA OFICIAL FESTBLEND CUIABÁ 360°*\n\n` +
+                   `• *Convidados:* ${guests} pessoas\n` +
+                   `• *Equipe:* ${bts}\n` +
+                   `• *Estrutura:* Bar 360 Iluminado com Cardápio Completo\n` +
+                   `• *Valor Total:* ${total}\n` +
+                   `• *Reserva de Data:* Entrada de 20% para bloqueio da agenda.\n\n` +
+                   `Aguardamos sua confirmação para preparar o contrato!`;
+
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Proposta comercial copiada para a área de transferência! Pronta para colar no WhatsApp da noiva.');
+      });
+    }
+  </script>
+</body>
+</html>
