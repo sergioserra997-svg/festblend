@@ -26,6 +26,7 @@
 | `css/theme.css` | `/var/www/aisecompany/festblend/css/theme.css` | 4603 bytes (4.5 KB) | `1681b049dc5129377ae5ee89146522c0ff569b936d5e1f822a101f304aedbab7` | HTTP 200 OK (SSL Ativo) |
 | `js/auth.js` | `/var/www/aisecompany/festblend/js/auth.js` | 3239 bytes (3.2 KB) | `48202f03d2f6859c63b404da64d4c82c2a934444983e0eb8ec6fc8112a6b83cd` | HTTP 200 OK (SSL Ativo) |
 | `js/d1_client.js` | `/var/www/aisecompany/festblend/js/d1_client.js` | 1565 bytes (1.5 KB) | `3f3360d1573c3405c9bb15ecf36ff69bc1d5fe4e71911fa4d8bcae9500e82204` | HTTP 200 OK (SSL Ativo) |
+| `festblend_messaging_service.js` | `/var/www/aisecompany/festblend/festblend_messaging_service.js` | 11654 bytes (11.4 KB) | `09ef4cc3a153e3bc5021a5b1f786f78dc576301bc715df1f8accc17e90604ff0` | PM2 Online (Porta 4070 · Fork Mode) |
 
 ## Auditoria de Conformidade e Normas Técnicas
 
