@@ -2492,15 +2492,15 @@ h1, h2, h3, .panel-section-title, .chat-client-title, .card-lead-name {
           <div style="font-size:0.64rem; text-transform:uppercase; color:var(--text-muted); font-weight:700; display:flex; align-items:center; gap:4px;">
             <i data-lucide="coins" style="width:11px;height:11px;color:var(--gold-primary);"></i> Valor da Proposta
           </div>
-          <div id="rp-deal-total" style="font-size:1.05rem; font-weight:900; color:var(--gold-light); margin-top:3px;">R$ 4.800,00</div>
+          <div id="rp-deal-total" style="font-size:1.05rem; font-weight:900; color:var(--gold-light); margin-top:3px;">R$ 0,00</div>
         </div>
         
         <div style="background:rgba(16, 185, 129, 0.08); border:1px solid rgba(16, 185, 129, 0.25); border-radius:8px; padding:8px 10px;">
           <div style="font-size:0.64rem; text-transform:uppercase; color:var(--text-muted); font-weight:700; display:flex; align-items:center; justify-content:space-between;">
             <span style="display:flex; align-items:center; gap:4px;"><i data-lucide="qr-code" style="width:11px;height:11px;color:var(--green);"></i> Sinal 30% PIX</span>
-            <span id="rp-down-status-badge" style="font-size:0.6rem; color:var(--yellow); font-weight:800;">NA MESA</span>
+            <span id="rp-down-status-badge" style="font-size:0.6rem; color:var(--text-muted); font-weight:800;">PENDENTE</span>
           </div>
-          <div id="rp-down-payment" style="font-size:1.05rem; font-weight:900; color:var(--green); margin-top:3px;">R$ 1.440,00</div>
+          <div id="rp-down-payment" style="font-size:1.05rem; font-weight:900; color:var(--text-muted); margin-top:3px;">R$ 0,00</div>
         </div>
       </div>
 
@@ -2508,14 +2508,14 @@ h1, h2, h3, .panel-section-title, .chat-client-title, .card-lead-name {
       <div style="background:rgba(0,0,0,0.4); border-radius:8px; padding:8px 10px; border:1px solid rgba(255,255,255,0.06);">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; font-size:0.68rem;">
           <span style="color:var(--text-sub); font-weight:700;">Progresso do Pagamento</span>
-          <span id="rp-progress-label" style="color:var(--gold-primary); font-weight:800;">30% (Reserva de Data)</span>
+          <span id="rp-progress-label" style="color:var(--text-muted); font-weight:800;">0% (Sem proposta formalizada)</span>
         </div>
         <div style="width:100%; height:6px; background:rgba(255,255,255,0.08); border-radius:4px; overflow:hidden;">
-          <div id="rp-progress-bar-fill" style="width:30%; height:100%; background:linear-gradient(90deg, #c5a059, #10b981); border-radius:4px;"></div>
+          <div id="rp-progress-bar-fill" style="width:0%; height:100%; background:linear-gradient(90deg, #c5a059, #10b981); border-radius:4px;"></div>
         </div>
         <div style="display:flex; justify-content:space-between; margin-top:4px; font-size:0.62rem; color:var(--text-muted);">
-          <span>Sinal: R$ 1.440,00</span>
-          <span>Saldo na Semana: R$ 3.360,00</span>
+          <span>Sinal: R$ 0,00</span>
+          <span>Saldo: R$ 0,00</span>
         </div>
       </div>
 
@@ -2540,7 +2540,7 @@ h1, h2, h3, .panel-section-title, .chat-client-title, .card-lead-name {
       <!-- Cronômetro Regressivo para o Evento -->
       <div class="sub-info-box" style="margin-bottom:0; background:rgba(0,0,0,0.5);">
         <div class="sub-info-label"><i data-lucide="clock" style="width:11px;height:11px;color:var(--gold-primary);"></i> Contagem Regressiva do Evento</div>
-        <div class="sub-info-value" id="rp-event-countdown" style="font-size:0.75rem; font-weight:800; color:var(--text-main);">Faltam 15 dias para o evento</div>
+        <div class="sub-info-value" id="rp-event-countdown" style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">Data do evento não cadastrada</div>
       </div>
     </div>
 
@@ -4547,56 +4547,71 @@ async function loadRealStatsAndTasks(remoteJid, name, isGroup) {
   const closerNameEl = document.getElementById('rp-closer-name');
   const countdownEl = document.getElementById('rp-event-countdown');
 
-  // Valores padrão / D1
-  const eventDate = c.event_date || '24/Out/2026';
-  const guestCount = c.guest_count || 250;
-  const eventLoc = c.event_location || 'Espaço Ágora / Leila Malouf, Cuiabá';
-  const dealStage = c.deal_stage || 'Proposta Apresentada · Sinal Pendente';
-  const dealVal = (typeof c.deal_value === 'number' && c.deal_value > 0) ? c.deal_value : 4800.0;
-  const downVal = (typeof c.down_payment === 'number' && c.down_payment > 0) ? c.down_payment : (dealVal * 0.3);
+  // Valores reais extraídos do D1 (Verdade Bruta · Zero Invenção)
+  const eventDate = c.event_date || 'A definir';
+  const guestCount = (c.guest_count && c.guest_count > 0) ? `${c.guest_count} Pessoas` : 'A definir';
+  const eventLoc = c.event_location || 'A definir';
+  const dealStage = c.deal_stage || 'Contato Sincronizado D1';
+  const dealVal = (typeof c.deal_value === 'number' && c.deal_value > 0) ? c.deal_value : 0;
+  const downVal = (typeof c.down_payment === 'number' && c.down_payment > 0) ? c.down_payment : 0;
   const closerKey = c.assigned_to || (ACTIVE_CHAT ? ACTIVE_CHAT.assigned_to : 'eduardo');
   const closerTitle = closerKey === 'anapaula' ? 'Ana Paula Serra (Vendas/Fin)' : (closerKey === 'ruben' ? 'Ruben Ribeiro (Comercial)' : 'Carlos Eduardo (Diretoria)');
 
   if (dateEl) dateEl.innerText = eventDate;
-  if (guestsEl) guestsEl.innerText = `${guestCount} Pessoas`;
+  if (guestsEl) guestsEl.innerText = guestCount;
   if (locEl) locEl.innerText = eventLoc;
   if (stageEl) stageEl.innerText = dealStage;
-  if (totalEl) totalEl.innerText = `R$ ${dealVal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-  if (downEl) downEl.innerText = `R$ ${downVal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+  if (totalEl) totalEl.innerText = dealVal > 0 ? `R$ ${dealVal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}` : 'R$ 0,00';
+  if (downEl) downEl.innerText = downVal > 0 ? `R$ ${downVal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}` : 'R$ 0,00';
   if (closerNameEl) closerNameEl.innerHTML = `<i data-lucide="shield" style="width:12px;height:12px;color:var(--gold-primary);"></i> ${closerTitle}`;
 
-  const pct = Math.round((downVal / dealVal) * 100);
+  const pct = dealVal > 0 ? Math.round((downVal / dealVal) * 100) : 0;
   if (progFill) progFill.style.width = `${pct}%`;
-  if (progLabel) progLabel.innerText = `${pct}% (${pct >= 30 ? 'Sinal 30% PIX' : 'Em Negociação'})`;
+  if (progLabel) progLabel.innerText = dealVal > 0 ? `${pct}% (${pct >= 30 ? 'Sinal 30% PIX Confirmado' : 'Em Negociação'})` : '0% (Sem proposta formalizada)';
   if (downBadgeEl) {
     if (pct >= 30) {
       downBadgeEl.innerText = 'SINAL PAGO';
       downBadgeEl.style.color = 'var(--green)';
-    } else {
+    } else if (dealVal > 0) {
       downBadgeEl.innerText = 'NA MESA';
       downBadgeEl.style.color = 'var(--yellow)';
+    } else {
+      downBadgeEl.innerText = 'PENDENTE';
+      downBadgeEl.style.color = 'var(--text-muted)';
     }
   }
 
   // Contagem regressiva
   if (countdownEl) {
-    countdownEl.innerText = 'Faltam 42 dias para o evento (Agenda Confirmada)';
+    countdownEl.innerText = c.event_date ? `Data prevista: ${c.event_date}` : 'Data do evento não cadastrada';
+    countdownEl.style.color = c.event_date ? 'var(--text-main)' : 'var(--text-muted)';
   }
 
   // Resumo organizado em tópicos
   const summaryBulletsEl = document.getElementById('rp-summary-bullets');
   if (summaryBulletsEl) {
-    summaryBulletsEl.innerHTML = `
-      <div style="font-size:0.75rem; color:var(--text-main); display:flex; flex-direction:column; gap:6px; line-height:1.4;">
-        <div>• <strong>Demanda:</strong> Ilha circular Festblend 360 com 4 bartenders para recepção dos convidados.</div>
-        <div>• <strong>Carta de Drinks:</strong> Gin Sensations, Moscow Mule com espuma artesanal e Chopp Louvada.</div>
-        <div>• <strong>Espaço & Logística:</strong> ${eventLoc} · Ponto de energia 220v alinhado.</div>
-        <div>• <strong>Próximo Passo:</strong> Aguardando comprovante do PIX do sinal de 30% para trava da data na agenda.</div>
-      </div>
-    `;
+    const contactName = c.name || c.phone || 'Contato';
+    if (CURRENT_MESSAGES && CURRENT_MESSAGES.length > 0) {
+      summaryBulletsEl.innerHTML = `
+        <div style="font-size:0.75rem; color:var(--text-main); display:flex; flex-direction:column; gap:6px; line-height:1.4;">
+          <div>• <strong>Contato:</strong> ${escapeHtml(contactName)} · ${c.phone || ''}</div>
+          <div>• <strong>Atendente:</strong> ${closerTitle}</div>
+          <div>• <strong>Histórico:</strong> ${CURRENT_MESSAGES.length} mensagens reais registradas no Cloudflare D1.</div>
+          <div>• <strong>Estágio:</strong> ${escapeHtml(dealStage)}</div>
+        </div>
+      `;
+    } else {
+      summaryBulletsEl.innerHTML = `
+        <div style="font-size:0.75rem; color:var(--text-muted); display:flex; flex-direction:column; gap:6px; line-height:1.4;">
+          <div>• <strong>Contato:</strong> ${escapeHtml(contactName)} sincronizado via extensão WhatsApp D1.</div>
+          <div>• <strong>Responsável:</strong> ${closerTitle}.</div>
+          <div>• <strong>Status da Conversa:</strong> Contato catalogado no banco Cloudflare D1. Aguardando novas mensagens da Evolution API para atualização do histórico.</div>
+        </div>
+      `;
+    }
   }
 
-  // Métricas de mensagens
+  // Métricas de mensagens reais
   const totalMsgsEl = document.getElementById('rp-total-msgs');
   const sentMsgsEl = document.getElementById('rp-sent-msgs');
   const recvMsgsEl = document.getElementById('rp-recv-msgs');
@@ -4604,34 +4619,37 @@ async function loadRealStatsAndTasks(remoteJid, name, isGroup) {
   const lastTimeEl = document.getElementById('rp-last-time');
   const lastIncomingQuoteEl = document.getElementById('rp-last-incoming-quote');
 
-  const totalCount = CURRENT_MESSAGES.length || 6;
-  const sentCount = CURRENT_MESSAGES.filter(m => m.direction === 'OUT').length || 4;
-  const recvCount = CURRENT_MESSAGES.filter(m => m.direction === 'IN').length || 2;
+  const totalCount = CURRENT_MESSAGES ? CURRENT_MESSAGES.length : 0;
+  const sentCount = CURRENT_MESSAGES ? CURRENT_MESSAGES.filter(m => m.direction === 'OUT').length : 0;
+  const recvCount = CURRENT_MESSAGES ? CURRENT_MESSAGES.filter(m => m.direction === 'IN').length : 0;
 
   if (totalMsgsEl) totalMsgsEl.innerText = totalCount;
   if (sentMsgsEl) sentMsgsEl.innerText = sentCount;
   if (recvMsgsEl) recvMsgsEl.innerText = recvCount;
-  if (firstTimeEl) firstTimeEl.innerText = 'Hoje, 10:14';
-  if (lastTimeEl) lastTimeEl.innerText = 'Hoje, 10:20';
-  if (lastIncomingQuoteEl) lastIncomingQuoteEl.innerText = '"Como fazemos para fechar e reservar a data na agenda de vocês?"';
+  
+  if (totalCount > 0) {
+    const firstMsg = CURRENT_MESSAGES[0];
+    const lastMsg = CURRENT_MESSAGES[CURRENT_MESSAGES.length - 1];
+    const incomingMsgs = CURRENT_MESSAGES.filter(m => m.direction === 'IN');
+    const lastIncoming = incomingMsgs.length > 0 ? incomingMsgs[incomingMsgs.length - 1] : null;
 
-  // Checklist de demandas e tarefas do D1
+    if (firstTimeEl) firstTimeEl.innerText = firstMsg.timestamp ? formatMessageTime(firstMsg.timestamp) : '--';
+    if (lastTimeEl) lastTimeEl.innerText = lastMsg.timestamp ? formatMessageTime(lastMsg.timestamp) : '--';
+    if (lastIncomingQuoteEl) {
+      lastIncomingQuoteEl.innerText = lastIncoming ? `"${(lastIncoming.content || '').slice(0, 80)}..."` : 'Nenhuma mensagem recebida';
+    }
+  } else {
+    if (firstTimeEl) firstTimeEl.innerText = '--';
+    if (lastTimeEl) lastTimeEl.innerText = '--';
+    if (lastIncomingQuoteEl) lastIncomingQuoteEl.innerText = 'Nenhuma mensagem registrada no histórico';
+  }
+
+  // Checklist de demandas e tarefas reais do D1
   const tasksContainer = document.getElementById('rp-tasks-list');
   if (tasksContainer) {
     tasksContainer.innerHTML = `
-      <div style="display:flex; flex-direction:column; gap:6px;">
-        <label style="display:flex; align-items:center; gap:8px; font-size:0.75rem; color:var(--text-main); cursor:pointer;">
-          <input type="checkbox" checked style="accent-color:var(--gold-primary);"> <span>Apresentação da Ilha 360 enviada no WhatsApp</span>
-        </label>
-        <label style="display:flex; align-items:center; gap:8px; font-size:0.75rem; color:var(--text-main); cursor:pointer;">
-          <input type="checkbox" checked style="accent-color:var(--gold-primary);"> <span>Cardápio de Drinks e Moscow Mule encaminhado</span>
-        </label>
-        <label style="display:flex; align-items:center; gap:8px; font-size:0.75rem; color:var(--text-main); cursor:pointer;">
-          <input type="checkbox" style="accent-color:var(--gold-primary);"> <span>Confirmar recebimento do Sinal de 30% via PIX</span>
-        </label>
-        <label style="display:flex; align-items:center; gap:8px; font-size:0.75rem; color:var(--text-main); cursor:pointer;">
-          <input type="checkbox" style="accent-color:var(--gold-primary);"> <span>Alinhar visita técnica de montagem 220v com o espaço</span>
-        </label>
+      <div style="font-size:0.72rem; color:var(--text-muted); padding:4px 0; font-style:italic;">
+        Nenhuma tarefa pendente para este contato no Cloudflare D1.
       </div>
     `;
   }
@@ -6626,144 +6644,19 @@ function renderMessagesStream() {
   if (!stream) return;
 
   if (CURRENT_MESSAGES.length === 0) {
-    const contactName = (ACTIVE_CHAT ? (ACTIVE_CHAT.name || ACTIVE_CHAT.push_name || 'Cliente') : 'Cliente');
-    const closerKey = (ACTIVE_CHAT ? (ACTIVE_CHAT.assigned_to || 'eduardo') : 'eduardo');
-    const closerName = closerKey === 'anapaula' ? 'Ana Paula Serra' : (closerKey === 'ruben' ? 'Ruben Ribeiro' : 'Carlos Eduardo');
-    const closerRole = closerKey === 'anapaula' ? 'Closer Vendas & Financeiro' : (closerKey === 'ruben' ? 'Closer Comercial & Eventos' : 'Diretoria Executiva');
-    
+    const contactName = (ACTIVE_CHAT ? (ACTIVE_CHAT.name || ACTIVE_CHAT.push_name || 'Contato') : 'Contato');
     stream.innerHTML = `
-      <div class="date-divider">
-        <span>Hoje · Atendimento Festblend Cuiabá 360</span>
-      </div>
-
-      <!-- Mensagem 1: Lead chega com demanda de evento -->
-      <div class="msg-row incoming">
-        <div class="msg-bubble">
-          <div>Olá! Gostaria de saber como funciona a estrutura circular da Festblend 360 para meu evento aqui em Cuiabá. Vocês têm disponibilidade e podem me passar o cardápio de drinks?</div>
-          <div class="msg-time-status">
-            <span>10:14</span>
-          </div>
+      <div style="margin: auto; text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 48px 24px;">
+        <div style="width: 56px; height: 56px; border-radius: 50%; background: rgba(197, 160, 89, 0.08); border: 1px solid var(--card-border); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto; color: var(--gold-primary);">
+          <i data-lucide="message-square" style="width: 24px; height: 24px;"></i>
         </div>
-      </div>
-
-      <!-- Mensagem 2: Closer responde com acolhimento executivo -->
-      <div class="msg-row outgoing">
-        <div class="msg-bubble">
-          <div>Olá, <strong>${contactName}</strong>! Tudo bem? Que prazer falar com você! Aqui é o <strong>${closerName}</strong> (${closerRole}) da <strong>Festblend Cuiabá 360</strong>. Parabéns pela escolha da data! Nossa ilha móvel em inox escovado com iluminação cênica de LED é uma atração exclusiva que transforma qualquer casamento ou celebração VIP em Cuiabá.</div>
-          <div class="msg-time-status">
-            <span>10:15</span>
-            <i data-lucide="check-check" style="width:12px;height:12px;color:var(--gold-primary);"></i>
-          </div>
+        <div style="font-weight: 700; color: var(--text-main); font-size: 0.95rem; margin-bottom: 6px;">Nenhuma mensagem registrada ainda para este contato</div>
+        <div style="font-size: 0.78rem; color: var(--text-sub); max-width: 440px; margin: 0 auto 18px auto; line-height: 1.45;">
+          O contato <strong>${contactName}</strong> está sincronizado no Cloudflare D1 a partir da extensão WhatsApp Fastblend. Conforme novas mensagens forem enviadas ou recebidas via WhatsApp (Evolution API na VPS), elas serão registradas e exibidas em tempo real aqui.
         </div>
-      </div>
-
-      <!-- Mensagem 3: Áudio de Voz explicativo com waveform e reprodução -->
-      <div class="msg-row outgoing">
-        <div class="msg-bubble" style="padding:10px 14px;">
-          <div class="msg-real-audio-player">
-            <button type="button" class="btn-audio-play-toggle" onclick="toggleAudioPlay(this, '${encodeURIComponent("Olá, gravei esse áudio rápido para te passar os detalhes da nossa ilha circular 360. Trabalhamos com balcão em inox escovado, iluminação cênica de LED, equipe de 4 bartenders experientes e cardápio de coquetéis clássicos e autorais com frutas frescas selecionadas.")}')" data-speed="1.0">
-              <i data-lucide="play" style="width:16px;height:16px;"></i>
-            </button>
-            <div class="audio-waveform-bar">
-              <span style="height:12px;"></span><span style="height:18px;"></span><span style="height:8px;"></span>
-              <span style="height:22px;"></span><span style="height:14px;"></span><span style="height:19px;"></span>
-              <span style="height:10px;"></span><span style="height:24px;"></span><span style="height:16px;"></span>
-              <span style="height:8px;"></span><span style="height:20px;"></span><span style="height:15px;"></span>
-              <span style="height:25px;"></span><span style="height:11px;"></span><span style="height:17px;"></span>
-              <span style="height:9px;"></span><span style="height:21px;"></span><span style="height:13px;"></span>
-            </div>
-            <span class="audio-time-label">0:00 / 0:24</span>
-            <button type="button" class="audio-speed-badge" onclick="cycleAudioSpeed(this)">1x</button>
-          </div>
-          <div style="margin-top:6px; font-size:0.72rem; color:var(--text-sub); display:flex; align-items:center; justify-content:space-between;">
-            <span style="display:flex; align-items:center; gap:4px;"><i data-lucide="mic" style="width:11px;height:11px;color:var(--gold-primary);"></i> Áudio de voz · ${closerName}</span>
-            <span style="font-size:0.65rem; color:var(--gold-light); cursor:pointer;" onclick="var p = this.parentElement.nextElementSibling; p.style.display = p.style.display === 'none' ? 'block' : 'none';">Ver transcrição</span>
-          </div>
-          <div style="display:none; margin-top:6px; padding:6px 10px; background:rgba(0,0,0,0.3); border-radius:6px; font-size:0.72rem; color:var(--text-sub); border-left:2px solid var(--gold-primary);">
-            "Olá, gravei esse áudio rápido para te passar os detalhes da nossa ilha circular 360. Trabalhamos com balcão em inox escovado, iluminação cênica de LED, equipe de 4 bartenders experientes e cardápio de coquetéis clássicos e autorais com frutas frescas selecionadas."
-          </div>
-          <div class="msg-time-status">
-            <span>10:16</span>
-            <i data-lucide="check-check" style="width:12px;height:12px;color:var(--gold-primary);"></i>
-          </div>
+        <div style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.72rem; color: var(--green); background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); padding: 6px 14px; border-radius: 20px;">
+          <i data-lucide="check-circle" style="width: 12px; height: 12px;"></i> Instância WhatsApp Fastblend Ativa na VPS Hetzner
         </div>
-      </div>
-
-      <!-- Mensagem 4: Foto da Ilha 360 com Lightbox -->
-      <div class="msg-row outgoing">
-        <div class="msg-bubble" style="padding:4px;">
-          <div class="msg-real-image-container" onclick="openImageLightbox('https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=1000')" title="Clique para ampliar a foto da estrutura" style="cursor:pointer; max-width:320px; border-radius:10px; overflow:hidden;">
-            <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=600" class="msg-real-image" alt="Ilha 360 Festblend" style="width:100%; height:180px; object-fit:cover; display:block;">
-            <div style="padding:10px; background:rgba(16,16,20,0.95); border-top:1px solid rgba(255,255,255,0.06);">
-              <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
-                <span class="vision-ai-badge" style="background:rgba(197,160,89,0.15); border:1px solid rgba(197,160,89,0.35); color:var(--gold-light); font-size:0.65rem; font-weight:800; padding:2px 6px; border-radius:4px; text-transform:uppercase;">
-                  <i data-lucide="sparkles" style="width:9px;height:9px;display:inline;"></i> Foto Real · Espaço Ágora Cuiabá
-                </span>
-              </div>
-              <div style="font-size:0.78rem; font-weight:700; color:var(--text-main); line-height:1.35;">Ilha Festblend 360 com 4 Bartenders e Chopp Louvada</div>
-              <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">Iluminação cênica de LED · Balcão circular em inox escovado</div>
-            </div>
-          </div>
-          <div class="msg-time-status" style="padding:4px 8px;">
-            <span>10:17</span>
-            <i data-lucide="check-check" style="width:12px;height:12px;color:var(--gold-primary);"></i>
-          </div>
-        </div>
-      </div>
-
-      <!-- Mensagem 5: Lead encanta-se e pede fechamento -->
-      <div class="msg-row incoming">
-        <div class="msg-bubble">
-          <div>Que estrutura deslumbrante! Ficou cinematográfica no espaço. Como fazemos para fechar e reservar a data na agenda de vocês?</div>
-          <div class="msg-time-status">
-            <span>10:18</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Mensagem 6: Proposta Comercial & Sinal 30% PIX -->
-      <div class="msg-row outgoing">
-        <div class="msg-bubble" style="padding:12px 14px; max-width:380px;">
-          <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid rgba(255,255,255,0.08);">
-            <div style="width:40px; height:40px; border-radius:10px; background:rgba(197,160,89,0.15); border:1px solid var(--gold-primary); display:flex; align-items:center; justify-content:center; color:var(--gold-primary); flex-shrink:0;">
-              <i data-lucide="file-text" style="width:20px;height:20px;"></i>
-            </div>
-            <div>
-              <div style="font-size:0.82rem; font-weight:800; color:var(--text-main);">Proposta Festblend 360 VIP</div>
-              <div style="font-size:0.68rem; color:var(--gold-light);">Ilha Circular + Gin Sensations + Moscow Mule</div>
-            </div>
-          </div>
-
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px;">
-            <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:8px; padding:6px 8px;">
-              <div style="font-size:0.6rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Valor Total</div>
-              <div style="font-size:0.95rem; font-weight:900; color:var(--gold-light); margin-top:2px;">R$ 4.800,00</div>
-            </div>
-            <div style="background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.25); border-radius:8px; padding:6px 8px;">
-              <div style="font-size:0.6rem; color:var(--green); text-transform:uppercase; font-weight:700;">Sinal 30% PIX</div>
-              <div style="font-size:0.95rem; font-weight:900; color:var(--green); margin-top:2px;">R$ 1.440,00</div>
-            </div>
-          </div>
-
-          <div style="display:flex; gap:6px;">
-            <button type="button" onclick="insertAttachmentTemplate('contrato_minuta')" style="flex:1; padding:7px 10px; border-radius:8px; background:rgba(197,160,89,0.15); border:1px solid var(--gold-primary); color:var(--gold-light); font-size:0.72rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;">
-              <i data-lucide="download" style="width:12px;height:12px;"></i> Baixar Proposta PDF
-            </button>
-            <button type="button" onclick="navigator.clipboard.writeText('12.345.678/0001-90'); alert('Chave PIX Festblend CNPJ copiada com sucesso!');" style="flex:1; padding:7px 10px; border-radius:8px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); color:var(--green); font-size:0.72rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;">
-              <i data-lucide="qr-code" style="width:12px;height:12px;"></i> Copiar PIX Sinal
-            </button>
-          </div>
-
-          <div class="msg-time-status" style="margin-top:8px;">
-            <span>10:20</span>
-            <i data-lucide="check-check" style="width:12px;height:12px;color:var(--gold-primary);"></i>
-          </div>
-        </div>
-      </div>
-
-      <div style="margin: 16px auto; text-align: center; color: var(--gold-primary); font-size: 0.72rem; background: rgba(197,160,89,0.08); border: 1px solid rgba(197,160,89,0.22); padding: 8px 16px; border-radius: 20px; max-width: 480px; display:flex; align-items:center; justify-content:center; gap:6px;">
-        <i data-lucide="shield-check" style="width:13px;height:13px;"></i>
-        <span>Atendimento sincronizado · Digite abaixo para enviar novas mensagens e gravar no Cloudflare D1</span>
       </div>
     `;
     stream.scrollTop = stream.scrollHeight;

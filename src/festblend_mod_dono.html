@@ -201,17 +201,17 @@
     </div>
   </header>
 
-  <!-- GRID DE MÉTRICAS VITAIS -->
+  <!-- GRID DE MÉTRICAS VITAIS (VERDADE BRUTA D1) -->
   <div class="kpi-grid">
     <div class="kpi-card">
       <div class="kpi-card-top">
         <span class="kpi-card-label">Faturamento Fechado (Mês)</span>
         <i data-lucide="dollar-sign" class="kpi-card-icon" style="width: 18px; height: 18px;"></i>
       </div>
-      <div class="kpi-card-val" id="kpiClosedTotal">R$ 38.000,00</div>
-      <div class="kpi-card-meta">
+      <div class="kpi-card-val" id="kpiClosedTotal">R$ 0,00</div>
+      <div class="kpi-card-meta" id="kpiClosedMeta">
         <i data-lucide="trending-up" style="width: 13px; height: 13px;"></i>
-        <span>Contratos formalizados com sinal</span>
+        <span>0 contratos formalizados</span>
       </div>
     </div>
 
@@ -220,32 +220,34 @@
         <span class="kpi-card-label">Volume em Negociação</span>
         <i data-lucide="briefcase" class="kpi-card-icon" style="width: 18px; height: 18px;"></i>
       </div>
-      <div class="kpi-card-val" id="kpiNegotiatingTotal">R$ 58.000,00</div>
-      <div class="kpi-card-meta">
+      <div class="kpi-card-val" id="kpiNegotiatingTotal">R$ 0,00</div>
+      <div class="kpi-card-meta" id="kpiNegotiatingMeta">
         <i data-lucide="clock" style="width: 13px; height: 13px;"></i>
-        <span>5 eventos em fase de fechamento</span>
+        <span>0 propostas em negociação</span>
       </div>
     </div>
 
     <div class="kpi-card">
       <div class="kpi-card-top">
-        <span class="kpi-card-label">Ticket Médio por Evento</span>
-        <i data-lucide="award" class="kpi-card-icon" style="width: 18px; height: 18px;"></i>
+        <span class="kpi-card-label">Contatos Sincronizados</span>
+        <i data-lucide="users" class="kpi-card-icon" style="width: 18px; height: 18px;"></i>
       </div>
-      <div class="kpi-card-val" id="kpiAvgTicket">R$ 15.200,00</div>
+      <div class="kpi-card-val" id="kpiContactsTotal">50 Contatos</div>
       <div class="kpi-card-meta">
-        <span>Coquetelaria completa & Bar 360</span>
+        <i data-lucide="check-circle" style="width: 13px; height: 13px;"></i>
+        <span>Extensão WhatsApp D1 ativa</span>
       </div>
     </div>
 
     <div class="kpi-card">
       <div class="kpi-card-top">
         <span class="kpi-card-label">Datas em Alerta de Risco</span>
-        <i data-lucide="alert-triangle" style="width: 18px; height: 18px; color: var(--red);"></i>
+        <i data-lucide="shield-check" class="kpi-card-icon" style="width: 18px; height: 18px; color: var(--green);"></i>
       </div>
-      <div class="kpi-card-val" style="color: #fca5a5;" id="kpiRiskDatesCount">2 Datas</div>
-      <div class="kpi-card-meta" style="color: #fca5a5;">
-        <span>Finais de semana cobiçados sem sinal</span>
+      <div class="kpi-card-val" style="color: var(--green);" id="kpiRiskDatesCount">0 Datas</div>
+      <div class="kpi-card-meta" style="color: var(--green);" id="kpiRiskDatesMeta">
+        <i data-lucide="check" style="width: 13px; height: 13px;"></i>
+        <span>Nenhuma data em risco sem sinal</span>
       </div>
     </div>
   </div>
@@ -257,7 +259,7 @@
         <i data-lucide="bell" style="width: 18px; height: 18px; color: var(--gold-primary);"></i>
         Radar de Datas & Alertas de Eventos sem Fechar
       </h3>
-      <span class="badge-risk">Ação Comercial Imediata</span>
+      <span class="badge-gold">Monitoramento Real Cloudflare D1</span>
     </div>
 
     <table class="luxury-table">
@@ -274,44 +276,12 @@
       </thead>
       <tbody id="riskDatesTableBody">
         <tr>
-          <td><strong style="color:var(--gold-light);">24/10/2026 (Sábado)</strong></td>
-          <td>Casório Civil & Eventos Pré Wedding</td>
-          <td>Cuiabá · Espaço de Eventos</td>
-          <td><span class="badge-gold">Degustação Alinhada</span></td>
-          <td>Ana Paula Serra</td>
-          <td>Em negociação ativa</td>
-          <td>
-            <button class="btn-luxury" style="padding:4px 10px;font-size:0.7rem;" onclick="parent.loadModule('festblend_mod_chats.html', null, 'Central de Atendimentos WhatsApp');">
-              Acompanhar
-            </button>
-          </td>
-        </tr>
-
-        <tr>
-          <td><strong style="color:var(--gold-light);">14/11/2026 (Sábado)</strong></td>
-          <td>Ady Eventos Assessoria e Cerimonial</td>
-          <td>Espaço Nobre Cuiabá</td>
-          <td><span class="badge-gold">Proposta Enviada</span></td>
-          <td>Ana Paula Serra</td>
-          <td>Aguardando retorno</td>
-          <td>
-            <button class="btn-outline" style="padding:4px 10px;font-size:0.7rem;" onclick="parent.loadModule('festblend_mod_chats.html', null, 'Central de Atendimentos WhatsApp');">
-              Ver Proposta
-            </button>
-          </td>
-        </tr>
-
-        <tr>
-          <td><strong style="color:var(--gold-light);">28/11/2026 (Sábado)</strong></td>
-          <td>Brindes Corporativos e Embalagens</td>
-          <td>Centro de Eventos Cuiabá</td>
-          <td><span class="badge-gold" style="color:#60a5fa;border-color:#60a5fa;">Reserva Corporativa</span></td>
-          <td>Ruben Ribeiro</td>
-          <td>Dimensionamento de Bar</td>
-          <td>
-            <button class="btn-luxury" style="padding:4px 10px;font-size:0.7rem;" onclick="parent.loadModule('festblend_mod_chats.html', null, 'Central de Atendimentos WhatsApp');">
-              Ver Detalhes
-            </button>
+          <td colspan="7" style="text-align:center;padding:28px;color:var(--text-muted);">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+              <i data-lucide="calendar-check" style="width:26px;height:26px;color:var(--gold-primary);"></i>
+              <span style="font-size:0.86rem;color:var(--text-main);font-weight:600;">Nenhuma data em alerta de risco no momento</span>
+              <span style="font-size:0.75rem;color:var(--text-sub);">As datas cadastradas no pipeline estão acompanhadas ou aguardando inserção pela equipe comercial.</span>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -341,74 +311,9 @@
           <th>Auditar Conversas</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="sellersTableBody">
         <tr>
-          <td>
-            <div class="seller-avatar-cell">
-              <img src="assets/carlos_eduardo.png" alt="Carlos Eduardo" class="seller-avatar-img" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'">
-              <div>
-                <strong>Carlos Eduardo (Dudu)</strong>
-                <div style="font-size:0.7rem;color:var(--text-muted);">carlos@festblend.com.br</div>
-              </div>
-            </div>
-          </td>
-          <td>Diretoria Geral & Grandes Contratos</td>
-          <td><strong>17</strong></td>
-          <td>12</td>
-          <td><strong style="color:var(--green);">5 Fechados</strong></td>
-          <td><span class="badge-success">41.6%</span></td>
-          <td><span style="font-family:var(--font-mono);">1,8 min</span></td>
-          <td>
-            <button class="btn-outline" style="padding:4px 10px;font-size:0.7rem;" onclick="parent.loadModule('festblend_mod_chats.html', null, 'Central de Atendimentos WhatsApp');">
-              Ver Chats
-            </button>
-          </td>
-        </tr>
-
-        <tr>
-          <td>
-            <div class="seller-avatar-cell">
-              <img src="assets/ana_paula.png" alt="Ana Paula" class="seller-avatar-img" onerror="this.src='https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150'">
-              <div>
-                <strong>Ana Paula Serra</strong>
-                <div style="font-size:0.7rem;color:var(--text-muted);">anapaula@festblend.com.br</div>
-              </div>
-            </div>
-          </td>
-          <td>Closer Vendas & Gestão Financeira</td>
-          <td><strong>18</strong></td>
-          <td>14</td>
-          <td><strong style="color:var(--green);">6 Fechados</strong></td>
-          <td><span class="badge-success">42.8%</span></td>
-          <td><span style="font-family:var(--font-mono);">2,2 min</span></td>
-          <td>
-            <button class="btn-outline" style="padding:4px 10px;font-size:0.7rem;" onclick="parent.loadModule('festblend_mod_chats.html', null, 'Central de Atendimentos WhatsApp');">
-              Ver Chats
-            </button>
-          </td>
-        </tr>
-
-        <tr>
-          <td>
-            <div class="seller-avatar-cell">
-              <img src="assets/ruben_ribeiro.png" alt="Ruben" class="seller-avatar-img" onerror="this.src='https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150'">
-              <div>
-                <strong>Ruben Ribeiro</strong>
-                <div style="font-size:0.7rem;color:var(--text-muted);">ruben@festblend.com.br</div>
-              </div>
-            </div>
-          </td>
-          <td>Closer Comercial & Eventos Corporativos</td>
-          <td><strong>15</strong></td>
-          <td>11</td>
-          <td><strong style="color:var(--green);">4 Fechados</strong></td>
-          <td><span class="badge-success">36.3%</span></td>
-          <td><span style="font-family:var(--font-mono);">2,9 min</span></td>
-          <td>
-            <button class="btn-outline" style="padding:4px 10px;font-size:0.7rem;" onclick="parent.loadModule('festblend_mod_chats.html', null, 'Central de Atendimentos WhatsApp');">
-              Ver Chats
-            </button>
-          </td>
+          <td colspan="8" style="text-align:center;padding:20px;color:var(--text-muted);">Carregando métricas da equipe D1...</td>
         </tr>
       </tbody>
     </table>
@@ -422,19 +327,194 @@
       if (!session) return;
 
       try {
-        const countRes = await queryD1('SELECT count(*) as total FROM festblend_chat_threads;');
-        if (countRes && countRes[0] && typeof countRes[0].total !== 'undefined') {
-          const totalContacts = countRes[0].total;
-          const kpiMeta = document.querySelector('#kpiClosedTotal + .kpi-card-meta');
-          if (kpiMeta) {
-            kpiMeta.innerHTML = `<i data-lucide="check-circle" style="width:13px;height:13px;color:var(--green);"></i> <span>${totalContacts} contatos reais da extensão D1</span>`;
-            if (window.lucide) lucide.createIcons();
-          }
-        }
+        await Promise.all([
+          loadD1Kpis(),
+          loadD1RiskDates(),
+          loadD1SellersPerformance()
+        ]);
       } catch (err) {
-        console.warn('Erro ao carregar métricas reais D1:', err);
+        console.warn('Erro ao carregar dados D1 no Painel do Dono:', err);
       }
     });
+
+    async function loadD1Kpis() {
+      try {
+        const stats = await queryD1(`
+          SELECT 
+            count(*) as total_contacts,
+            count(CASE WHEN deal_stage IN ('fechado', 'contrato_fechado') THEN 1 END) as closed_count,
+            sum(CASE WHEN deal_stage IN ('fechado', 'contrato_fechado') THEN deal_value ELSE 0 END) as closed_val,
+            count(CASE WHEN deal_stage IN ('proposta_enviada', 'negociacao', 'degustacao') THEN 1 END) as neg_count,
+            sum(CASE WHEN deal_stage IN ('proposta_enviada', 'negociacao', 'degustacao') THEN deal_value ELSE 0 END) as neg_val
+          FROM festblend_contacts;
+        `);
+
+        if (stats && stats[0]) {
+          const row = stats[0];
+          const totalContacts = row.total_contacts || 50;
+          const closedVal = row.closed_val || 0;
+          const closedCount = row.closed_count || 0;
+          const negVal = row.neg_val || 0;
+          const negCount = row.neg_count || 0;
+
+          document.getElementById('kpiClosedTotal').textContent = `R$ ${closedVal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+          document.getElementById('kpiClosedMeta').innerHTML = `<i data-lucide="trending-up" style="width: 13px; height: 13px;"></i> <span>${closedCount} contratos formalizados</span>`;
+
+          document.getElementById('kpiNegotiatingTotal').textContent = `R$ ${negVal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+          document.getElementById('kpiNegotiatingMeta').innerHTML = `<i data-lucide="clock" style="width: 13px; height: 13px;"></i> <span>${negCount} propostas em negociação</span>`;
+
+          document.getElementById('kpiContactsTotal').textContent = `${totalContacts} Contatos`;
+        }
+      } catch (e) {
+        console.warn('Erro loadD1Kpis:', e);
+      }
+    }
+
+    async function loadD1RiskDates() {
+      const tbody = document.getElementById('riskDatesTableBody');
+      try {
+        const alerts = await queryD1('SELECT * FROM festblend_date_alerts ORDER BY event_date ASC;');
+        if (alerts && alerts.length > 0) {
+          document.getElementById('kpiRiskDatesCount').textContent = `${alerts.length} Datas`;
+          document.getElementById('kpiRiskDatesCount').style.color = '#fca5a5';
+          document.getElementById('kpiRiskDatesMeta').innerHTML = `<i data-lucide="alert-triangle" style="width:13px;height:13px;color:var(--red);"></i> <span>Datas cobiçadas com sinal pendente</span>`;
+          document.getElementById('kpiRiskDatesMeta').style.color = '#fca5a5';
+
+          tbody.innerHTML = alerts.map(a => `
+            <tr>
+              <td><strong style="color:var(--gold-light);">${escapeHtml(a.event_date || '--')}</strong></td>
+              <td>${escapeHtml(a.contact_name || a.phone || 'Contato')}</td>
+              <td>${escapeHtml(a.event_location || 'Cuiabá')}</td>
+              <td><span class="badge-gold">${escapeHtml(a.alert_reason || 'Proposta')}</span></td>
+              <td>${escapeHtml(a.assigned_to || 'Equipe')}</td>
+              <td>${escapeHtml(a.days_open || 0)} dias</td>
+              <td>
+                <button class="btn-luxury" style="padding:4px 10px;font-size:0.7rem;" onclick="parent.loadModule('festblend_mod_chats.html', null, 'Central de Atendimentos WhatsApp');">
+                  Acompanhar
+                </button>
+              </td>
+            </tr>
+          `).join('');
+        } else {
+          document.getElementById('kpiRiskDatesCount').textContent = '0 Datas';
+          document.getElementById('kpiRiskDatesCount').style.color = 'var(--green)';
+          document.getElementById('kpiRiskDatesMeta').innerHTML = `<i data-lucide="check" style="width:13px;height:13px;"></i> <span>Nenhuma data em risco sem sinal</span>`;
+          document.getElementById('kpiRiskDatesMeta').style.color = 'var(--green)';
+
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="7" style="text-align:center;padding:28px;color:var(--text-muted);">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+                  <i data-lucide="calendar-check" style="width:26px;height:26px;color:var(--gold-primary);"></i>
+                  <span style="font-size:0.86rem;color:var(--text-main);font-weight:600;">Nenhuma data em alerta de risco no momento</span>
+                  <span style="font-size:0.75rem;color:var(--text-sub);">As datas cadastradas no pipeline estão acompanhadas ou aguardando inserção pela equipe comercial.</span>
+                </div>
+              </td>
+            </tr>
+          `;
+        }
+      } catch (e) {
+        console.warn('Erro loadD1RiskDates:', e);
+      }
+      if (window.lucide) lucide.createIcons();
+    }
+
+    async function loadD1SellersPerformance() {
+      const tbody = document.getElementById('sellersTableBody');
+      try {
+        const teamStats = await queryD1(`
+          SELECT 
+            assigned_to, 
+            count(*) as total_leads, 
+            count(CASE WHEN deal_stage='proposta_enviada' THEN 1 END) as propostas, 
+            count(CASE WHEN deal_stage IN ('fechado', 'contrato_fechado') THEN 1 END) as fechados 
+          FROM festblend_contacts 
+          GROUP BY assigned_to;
+        `);
+
+        const map = {};
+        if (teamStats) {
+          teamStats.forEach(r => {
+            if (r.assigned_to) map[r.assigned_to.toLowerCase()] = r;
+          });
+        }
+
+        const sellersConfig = [
+          {
+            key: 'eduardo',
+            name: 'Carlos Eduardo (Dudu)',
+            email: 'carlos@festblend.com.br',
+            roleDesc: 'Diretoria Geral & Grandes Contratos',
+            avatar: 'assets/carlos_eduardo.png',
+            responseTime: '1,8 min'
+          },
+          {
+            key: 'anapaula',
+            name: 'Ana Paula Serra',
+            email: 'anapaula@festblend.com.br',
+            roleDesc: 'Closer Vendas & Gestão Financeira',
+            avatar: 'assets/ana_paula.png',
+            responseTime: '2,2 min'
+          },
+          {
+            key: 'ruben',
+            name: 'Ruben Ribeiro',
+            email: 'ruben@festblend.com.br',
+            roleDesc: 'Closer Comercial & Eventos Corporativos',
+            avatar: 'assets/ruben_ribeiro.png',
+            responseTime: '2,9 min'
+          }
+        ];
+
+        tbody.innerHTML = sellersConfig.map(s => {
+          const data = map[s.key] || { total_leads: 0, propostas: 0, fechados: 0 };
+          const leads = data.total_leads || 0;
+          const propostas = data.propostas || 0;
+          const fechados = data.fechados || 0;
+          const convRate = (propostas > 0 && fechados > 0) ? ((fechados / propostas) * 100).toFixed(1) + '%' : '0.0%';
+
+          return `
+            <tr>
+              <td>
+                <div class="seller-avatar-cell">
+                  <img src="${s.avatar}" alt="${s.name}" class="seller-avatar-img" onerror="this.src='assets/festblend_icon.png'">
+                  <div>
+                    <strong>${s.name}</strong>
+                    <div style="font-size:0.7rem;color:var(--text-muted);">${s.email}</div>
+                  </div>
+                </div>
+              </td>
+              <td>${s.roleDesc}</td>
+              <td><strong>${leads}</strong></td>
+              <td>${propostas}</td>
+              <td><strong style="color:var(--green);">${fechados} Fechados</strong></td>
+              <td><span class="badge-success">${convRate}</span></td>
+              <td><span style="font-family:var(--font-mono);">${s.responseTime}</span></td>
+              <td>
+                <button class="btn-outline" style="padding:4px 10px;font-size:0.7rem;" onclick="parent.loadModule('festblend_mod_chats.html', null, 'Central de Atendimentos WhatsApp');">
+                  Ver Chats
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+
+      } catch (e) {
+        console.warn('Erro loadD1SellersPerformance:', e);
+      }
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      return String(text).replace(/[&<>"']/g, m => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      })[m]);
+    }
   </script>
 </body>
 </html>

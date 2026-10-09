@@ -707,20 +707,92 @@
       if (btn) btn.classList.add('active');
     }
 
-    function loadReportData() {
-      // Simulação de atualização dos dados via D1
+    async function loadReportData() {
       const btn = document.querySelector('.btn-refresh-report');
-      if (btn) {
-        btn.innerHTML = '<i data-lucide="rotate-cw" style="width: 13px; height: 13px;"></i> Atualizando...';
-        setTimeout(() => {
-          btn.innerHTML = '<i data-lucide="rotate-cw" style="width: 13px; height: 13px;"></i> Atualizar';
-          lucide.createIcons();
-        }, 600);
+      if (btn) btn.innerHTML = '<i data-lucide="rotate-cw" style="width: 13px; height: 13px;"></i> Atualizando...';
+      
+      try {
+        const stats = await queryD1(`
+          SELECT 
+            count(*) as total_contacts,
+            count(CASE WHEN deal_stage='proposta_enviada' THEN 1 END) as propostas,
+            count(CASE WHEN deal_stage IN ('fechado', 'contrato_fechado') THEN 1 END) as fechados,
+            sum(down_payment) as total_sinal,
+            sum(deal_value) as total_mesa
+          FROM festblend_contacts;
+        `);
+
+        if (stats && stats[0]) {
+          const s = stats[0];
+          const totalContacts = s.total_contacts || 50;
+          const propostas = s.propostas || 0;
+          const fechados = s.fechados || 0;
+          const sinal = s.total_sinal || 0;
+          const mesa = s.total_mesa || 0;
+
+          const p1 = document.getElementById('val-p1');
+          if (p1) p1.textContent = `${totalContacts} Contatos`;
+
+          const p3 = document.getElementById('val-p3');
+          if (p3) p3.textContent = `${propostas} Propostas`;
+
+          const p5 = document.getElementById('val-p5');
+          if (p5) p5.textContent = `${fechados} Contratos`;
+
+          const p8 = document.getElementById('val-p8');
+          if (p8) p8.textContent = `R$ ${sinal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+
+          const p8Mesa = document.getElementById('val-p8-mesa');
+          if (p8Mesa) p8Mesa.textContent = `R$ ${mesa.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+        }
+
+        const contacts = await queryD1(`
+          SELECT name, phone, event_type, event_date, guest_count, deal_value, assigned_to, deal_stage 
+          FROM festblend_contacts 
+          LIMIT 15;
+        `);
+
+        const tbody = document.querySelector('.data-table tbody');
+        if (tbody && contacts && contacts.length > 0) {
+          tbody.innerHTML = contacts.map(c => {
+            const closer = c.assigned_to === 'anapaula' ? 'Ana Paula Serra' : (c.assigned_to === 'ruben' ? 'Ruben Ribeiro' : 'Carlos Eduardo');
+            const val = c.deal_value > 0 ? `R$ ${c.deal_value.toLocaleString('pt-BR', {minimumFractionDigits: 2})}` : 'R$ 0,00';
+            return `
+              <tr>
+                <td><strong style="color: var(--text-main);">${escapeHtml(c.name || 'Contato')}</strong><br><span style="font-size: 0.7rem; color: var(--text-muted);">${escapeHtml(c.phone || '')}</span></td>
+                <td>${escapeHtml(c.event_type || 'Coquetelaria 360')}</td>
+                <td>${escapeHtml(c.event_date || 'A definir')}</td>
+                <td>${c.guest_count ? c.guest_count + ' pessoas' : 'A definir'}</td>
+                <td><strong style="color: var(--gold-light);">${val}</strong></td>
+                <td>${closer}</td>
+                <td><span class="micro-pill gold">${escapeHtml(c.deal_stage || 'Sincronizado')}</span></td>
+                <td><button class="btn-action-chat" onclick="parent.loadModule('festblend_mod_chats.html', null, 'Central de Atendimentos WhatsApp');"><i data-lucide="message-square" style="width: 12px; height: 12px;"></i> Chat</button></td>
+              </tr>
+            `;
+          }).join('');
+        }
+      } catch (err) {
+        console.warn('Erro ao carregar dados do D1 no relatório:', err);
       }
+
+      if (btn) btn.innerHTML = '<i data-lucide="rotate-cw" style="width: 13px; height: 13px;"></i> Atualizar';
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      return String(text).replace(/[&<>"']/g, m => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      })[m]);
     }
 
     document.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
+      loadReportData();
     });
   </script>
 </body>

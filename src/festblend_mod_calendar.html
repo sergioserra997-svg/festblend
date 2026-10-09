@@ -677,95 +677,47 @@
   </div>
 
   <script>
-    // Eventos Oficiais Festblend Cuiabá 360
-    // Eventos Oficiais Festblend Cuiabá 360
-    const FESTBLEND_EVENTS = [
-      {
-        id: 1,
-        date: '2026-10-24',
-        clientName: 'Casório Civil & Eventos Pré Wedding',
-        title: 'Casamento & Pré Wedding Cuiabá',
-        type: 'Casamento Nobre & Pré Wedding',
-        location: 'Espaço de Eventos Cuiabá',
-        time: '18:30 · Cerimônia & Recepção',
-        guests: 200,
-        drinks: 'Bar Premium & Gin Sensations',
-        responsible: 'Ana Paula Serra',
-        proposalValue: 14500,
-        signalPaid: 3000,
-        status: 'degustacao',
-        statusLabel: 'Degustação Alinhada',
-        notes: 'Degustação de drinks alinhada com os noivos. Barra móvel 360 solicitada para a recepção.'
-      },
-      {
-        id: 2,
-        date: '2026-11-14',
-        clientName: 'Ady Eventos Assessoria e Cerimonial',
-        title: 'Parceria de Cerimonial & Bar 360',
-        type: 'Cerimonial & Assessoria Nobre',
-        location: 'Espaço Nobre Cuiabá',
-        time: '19:00 · Recepção Completa',
-        guests: 300,
-        drinks: 'Bar 360 Full + Moscow Mule & Caipis Regionais',
-        responsible: 'Ana Paula Serra',
-        proposalValue: 18000,
-        signalPaid: 0,
-        status: 'negociacao',
-        statusLabel: 'Proposta Enviada',
-        notes: 'Assessoria de casamentos e debutantes em Cuiabá avaliando estrutura de atendimento.'
-      },
-      {
-        id: 3,
-        date: '2026-11-21',
-        clientName: 'Agenda Aberta',
-        title: 'Data Disponível para Reserva',
-        type: 'Oportunidade Comercial',
-        location: 'Cuiabá ou Várzea Grande',
-        time: 'Horário Livre',
-        guests: 0,
-        drinks: 'A Definir',
-        responsible: 'Eduardo Almeida',
-        proposalValue: 12000,
-        signalPaid: 0,
-        status: 'livre',
-        statusLabel: 'Agenda Aberta',
-        notes: 'Sábado livre de novembro para evento social ou casamento de alto padrão.'
-      },
-      {
-        id: 4,
-        date: '2026-11-28',
-        clientName: 'Brindes Corporativos e Embalagens',
-        title: 'Ação Institucional & Bar 360',
-        type: 'Corporativo & Parceria Empresarial',
-        location: 'Centro de Eventos Cuiabá',
-        time: '20:00 · Confraternização de Final de Ano',
-        guests: 350,
-        drinks: 'Bar Corporativo + Chopp Artesanal Louvada & Gin Bar',
-        responsible: 'Ruben Ribeiro',
-        proposalValue: 12000,
-        signalPaid: 0,
-        status: 'negociacao',
-        statusLabel: 'Em Negociação',
-        notes: 'Evento empresarial com bar temático e chopeira 360 iluminada.'
-      },
-      {
-        id: 5,
-        date: '2026-12-19',
-        clientName: 'Ana Paula Serra (Diretoria Festblend)',
-        title: 'Alinhamento Operacional e Diretoria Festblend',
-        type: 'Gestão Executiva & Diretoria',
-        location: 'Showroom Festblend 360 Cuiabá',
-        time: '12:00 às 22:00 · Planejamento Comercial',
-        guests: 50,
-        drinks: 'Estrutura 360 Completa + Chopp & Drinks Especiais',
-        responsible: 'Eduardo Almeida',
-        proposalValue: 25000,
-        signalPaid: 25000,
-        status: 'fechado',
-        statusLabel: 'Contrato Fechado',
-        notes: 'Alinhamento da temporada de eventos e formalização da equipe comercial.'
+    // Eventos Reais do Cloudflare D1 · Verdade Bruta
+    let FESTBLEND_EVENTS = [];
+
+    async function loadCalendarEventsFromD1() {
+      try {
+        const rows = await queryD1(`
+          SELECT 
+            phone, name as clientName, event_date as date, event_location as location,
+            guest_count as guests, menu_type as drinks, assigned_to as responsible,
+            deal_value as proposalValue, down_payment as signalPaid, deal_stage as status,
+            notes
+          FROM festblend_contacts 
+          WHERE event_date IS NOT NULL AND event_date != '' AND event_date != 'A definir';
+        `);
+        if (rows && rows.length > 0) {
+          FESTBLEND_EVENTS = rows.map((r, i) => ({
+            id: i + 1,
+            date: r.date,
+            clientName: r.clientName || r.phone,
+            title: r.clientName || 'Evento Festblend 360',
+            type: 'Evento Social / Casamento',
+            location: r.location || 'Cuiabá',
+            time: 'Horário a combinar',
+            guests: r.guests || 0,
+            drinks: r.drinks || 'A Definir',
+            responsible: r.responsible === 'anapaula' ? 'Ana Paula Serra' : (r.responsible === 'ruben' ? 'Ruben Ribeiro' : 'Carlos Eduardo'),
+            proposalValue: r.proposalValue || 0,
+            signalPaid: r.signalPaid || 0,
+            status: r.status || 'negociacao',
+            statusLabel: r.status || 'Em Negociação',
+            notes: r.notes || ''
+          }));
+        } else {
+          FESTBLEND_EVENTS = [];
+        }
+      } catch (e) {
+        console.warn('Erro ao carregar eventos D1:', e);
+        FESTBLEND_EVENTS = [];
       }
-    ];
+      renderCalendar();
+    }
 
     let currentDate = new Date(2026, 9, 1); // Outubro 2026 inicial
 
@@ -1039,7 +991,7 @@
 
     // Inicialização
     document.addEventListener('DOMContentLoaded', () => {
-      renderCalendar();
+      loadCalendarEventsFromD1();
     });
   </script>
 </body>
