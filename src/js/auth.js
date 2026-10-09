@@ -15,22 +15,22 @@ const FESTBLEND_PRESET_USERS = {
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
     permissions: ['all_chats', 'financials', 'date_radar', 'settings', 'reassign_leads']
   },
-  'larissa@festblend.com.br': {
-    id: 'larissa',
-    name: 'Larissa Vasconcelos',
+  'anapaula@festblend.com.br': {
+    id: 'anapaula',
+    name: 'Ana Paula Serra',
     role: 'vendedor',
-    title: 'Closer · Noivas & Casamentos Cuiabá',
-    email: 'larissa@festblend.com.br',
-    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150',
-    permissions: ['own_chats', 'own_kanban']
+    title: 'Closer Vendas & Financeiro',
+    email: 'anapaula@festblend.com.br',
+    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150',
+    permissions: ['own_chats', 'own_kanban', 'financials']
   },
-  'matheus@festblend.com.br': {
-    id: 'matheus',
-    name: 'Matheus Peixoto',
+  'ruben@festblend.com.br': {
+    id: 'ruben',
+    name: 'Ruben Ribeiro',
     role: 'vendedor',
-    title: 'Closer · Corporativo & Debutantes 15 Anos',
-    email: 'matheus@festblend.com.br',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
+    title: 'Closer Comercial & Eventos',
+    email: 'ruben@festblend.com.br',
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
     permissions: ['own_chats', 'own_kanban']
   }
 };

@@ -120,17 +120,17 @@ async function getMediaBase64FromEvolution(msgData, instanceName = 'fastblend') 
     }
 }
 
-// Atribuição Inteligente de Vendedor (Larissa Noivas vs Matheus Corporativo vs Eduardo)
+// Atribuição Inteligente de Vendedor (Ana Paula Closer/Fin vs Ruben Comercial vs Eduardo Diretoria)
 function determineAssignedSeller(text = '', currentAssigned = null) {
-    if (currentAssigned && ['larissa', 'matheus', 'eduardo'].includes(currentAssigned)) {
+    if (currentAssigned && ['anapaula', 'ruben', 'eduardo'].includes(currentAssigned)) {
         return currentAssigned;
     }
     const lower = text.toLowerCase();
-    if (lower.includes('noiva') || lower.includes('casamento') || lower.includes('vestido') || lower.includes('cerimônia') || lower.includes('cerimonial')) {
-        return 'larissa';
+    if (lower.includes('noiva') || lower.includes('casamento') || lower.includes('vestido') || lower.includes('cerimônia') || lower.includes('cerimonial') || lower.includes('financeiro') || lower.includes('pagamento') || lower.includes('sinal') || lower.includes('pix')) {
+        return 'anapaula';
     }
-    if (lower.includes('15 anos') || lower.includes('debutante') || lower.includes('corporativo') || lower.includes('empresa') || lower.includes('aniversário') || lower.includes('confraternização')) {
-        return 'matheus';
+    if (lower.includes('15 anos') || lower.includes('debutante') || lower.includes('corporativo') || lower.includes('empresa') || lower.includes('aniversário') || lower.includes('confraternização') || lower.includes('formatura')) {
+        return 'ruben';
     }
     return 'eduardo';
 }
@@ -256,9 +256,9 @@ app.post('/webhook', async (req, res) => {
                     (phone, remote_jid, name, push_name, avatar_url, event_type, deal_stage, assigned_to, updated_at)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'));
                 `;
-                const defaultEventType = assignedTo === 'larissa' ? 'Casamento' : (assignedTo === 'matheus' ? 'Corporativo' : 'Evento 360');
+                const defaultEventType = assignedTo === 'anapaula' ? 'Casamento & Pré Wedding' : (assignedTo === 'ruben' ? 'Corporativo & 15 Anos' : 'Evento Festblend 360');
                 await queryD1(insertContactSql, [
-                    cleanPhone, remoteJid, pushName, pushName, 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150', defaultEventType, 'data_consultada', assignedTo
+                    cleanPhone, remoteJid, pushName, pushName, 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150', defaultEventType, 'contato_extensao', assignedTo
                 ]);
             }
 

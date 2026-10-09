@@ -625,8 +625,8 @@
     <div id="masterSellerSelector" class="seller-filter-pill-group" style="display: none;">
       <button class="seller-pill active" onclick="filterBySeller('all')">Todos os Atendimentos</button>
       <button class="seller-pill" onclick="filterBySeller('eduardo')">Eduardo (Diretoria)</button>
-      <button class="seller-pill" onclick="filterBySeller('larissa')">Larissa · Noivas</button>
-      <button class="seller-pill" onclick="filterBySeller('matheus')">Matheus · 15 Anos / Corp</button>
+      <button class="seller-pill" onclick="filterBySeller('anapaula')">Ana Paula · Vendas & Fin</button>
+      <button class="seller-pill" onclick="filterBySeller('ruben')">Ruben · Vendas & Eventos</button>
     </div>
 
     <!-- Indicador de Vendedor Restrito -->
@@ -776,9 +776,9 @@
       <div class="event-field-group" data-role-restrict="admin">
         <label class="event-field-label">Vendedor Responsável</label>
         <select id="fieldAssignedTo" class="event-field-select">
-          <option value="eduardo">Eduardo Almeida (Dono)</option>
-          <option value="larissa">Larissa Vasconcelos (Noivas)</option>
-          <option value="matheus">Matheus Peixoto (15 Anos/Corp)</option>
+          <option value="eduardo">Eduardo Almeida (Diretoria)</option>
+          <option value="anapaula">Ana Paula Serra (Vendas & Fin)</option>
+          <option value="ruben">Ruben Ribeiro (Vendas & Eventos)</option>
         </select>
       </div>
 
@@ -905,7 +905,7 @@
               <span class="chat-time">${c.event_date ? c.event_date.slice(5) : ''}</span>
             </div>
             <div class="chat-preview-row">
-              <span class="chat-preview-text">${c.event_location || 'Cuiabá MT'}</span>
+              <span class="chat-preview-text">${c.notes ? (c.notes.length > 32 ? c.notes.slice(0, 32) + '...' : c.notes) : (c.event_location || 'Cuiabá MT')}</span>
               <span class="chat-event-badge">${c.event_type || 'Evento'}</span>
             </div>
           </div>
