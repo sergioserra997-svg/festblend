@@ -2525,10 +2525,10 @@ h1, h2, h3, .panel-section-title, .chat-client-title, .card-lead-name {
         </div>
         <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; margin-top:4px;">
           <div id="rp-closer-name" style="font-size:0.8rem; font-weight:800; color:var(--gold-light); display:flex; align-items:center; gap:6px;">
-            <i data-lucide="shield" style="width:12px;height:12px;color:var(--gold-primary);"></i> Eduardo Almeida (Diretoria)
+            <i data-lucide="shield" style="width:12px;height:12px;color:var(--gold-primary);"></i> Carlos Eduardo (Diretoria)
           </div>
           <div style="display:flex; gap:3px;">
-            <button type="button" onclick="quickAssignCloser('eduardo')" style="padding:2px 6px; border-radius:4px; background:rgba(197,160,89,0.15); border:1px solid rgba(197,160,89,0.3); color:var(--gold-light); font-size:0.6rem; cursor:pointer;" title="Atribuir a Eduardo">E</button>
+            <button type="button" onclick="quickAssignCloser('eduardo')" style="padding:2px 6px; border-radius:4px; background:rgba(197,160,89,0.15); border:1px solid rgba(197,160,89,0.3); color:var(--gold-light); font-size:0.6rem; cursor:pointer;" title="Atribuir a Carlos Eduardo">C</button>
             <button type="button" onclick="quickAssignCloser('anapaula')" style="padding:2px 6px; border-radius:4px; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.3); color:var(--blue); font-size:0.6rem; cursor:pointer;" title="Atribuir a Ana Paula">A</button>
             <button type="button" onclick="quickAssignCloser('ruben')" style="padding:2px 6px; border-radius:4px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); color:var(--green); font-size:0.6rem; cursor:pointer;" title="Atribuir a Ruben">R</button>
           </div>
@@ -4553,7 +4553,7 @@ async function loadRealStatsAndTasks(remoteJid, name, isGroup) {
   const dealVal = (typeof c.deal_value === 'number' && c.deal_value > 0) ? c.deal_value : 4800.0;
   const downVal = (typeof c.down_payment === 'number' && c.down_payment > 0) ? c.down_payment : (dealVal * 0.3);
   const closerKey = c.assigned_to || (ACTIVE_CHAT ? ACTIVE_CHAT.assigned_to : 'eduardo');
-  const closerTitle = closerKey === 'anapaula' ? 'Ana Paula Serra (Vendas/Fin)' : (closerKey === 'ruben' ? 'Ruben Ribeiro (Comercial)' : 'Eduardo Almeida (Diretoria)');
+  const closerTitle = closerKey === 'anapaula' ? 'Ana Paula Serra (Vendas/Fin)' : (closerKey === 'ruben' ? 'Ruben Ribeiro (Comercial)' : 'Carlos Eduardo (Diretoria)');
 
   if (dateEl) dateEl.innerText = eventDate;
   if (guestsEl) guestsEl.innerText = `${guestCount} Pessoas`;
@@ -5797,11 +5797,10 @@ function renderContactsList() {
   lucide.createIcons();
 }
 
-async 
 // Helpers Festblend Cuiabá 360
 async function quickAssignCloser(closerKey) {
   if (!ACTIVE_CHAT) return;
-  const closerName = closerKey === 'anapaula' ? 'Ana Paula Serra (Vendas/Fin)' : (closerKey === 'ruben' ? 'Ruben Ribeiro (Comercial)' : 'Eduardo Almeida (Diretoria)');
+  const closerName = closerKey === 'anapaula' ? 'Ana Paula Serra (Vendas/Fin)' : (closerKey === 'ruben' ? 'Ruben Ribeiro (Comercial)' : 'Carlos Eduardo (Diretoria)');
   const el = document.getElementById('rp-closer-name');
   if (el) el.innerHTML = `<i data-lucide="shield" style="width:12px;height:12px;color:var(--gold-primary);"></i> ${closerName}`;
   ACTIVE_CHAT.assigned_to = closerKey;
@@ -6627,7 +6626,7 @@ function renderMessagesStream() {
   if (CURRENT_MESSAGES.length === 0) {
     const contactName = (ACTIVE_CHAT ? (ACTIVE_CHAT.name || ACTIVE_CHAT.push_name || 'Cliente') : 'Cliente');
     const closerKey = (ACTIVE_CHAT ? (ACTIVE_CHAT.assigned_to || 'eduardo') : 'eduardo');
-    const closerName = closerKey === 'anapaula' ? 'Ana Paula Serra' : (closerKey === 'ruben' ? 'Ruben Ribeiro' : 'Eduardo Almeida');
+    const closerName = closerKey === 'anapaula' ? 'Ana Paula Serra' : (closerKey === 'ruben' ? 'Ruben Ribeiro' : 'Carlos Eduardo');
     const closerRole = closerKey === 'anapaula' ? 'Closer Vendas & Financeiro' : (closerKey === 'ruben' ? 'Closer Comercial & Eventos' : 'Diretoria Executiva');
     
     stream.innerHTML = `

@@ -16,304 +16,677 @@
   <script src="js/auth.js"></script>
 
   <style>
+    /* Universal Custom Luxury Scrollbar · 100% Theme Matched */
+    * {
+      scrollbar-width: thin !important;
+      scrollbar-color: #c5a059 #08080a !important;
+    }
+    ::-webkit-scrollbar {
+      width: 6px !important;
+      height: 6px !important;
+    }
+    ::-webkit-scrollbar-track {
+      background: #08080a !important;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #f1e3ad 0%, #c5a059 50%, #997836 100%) !important;
+      border-radius: 10px !important;
+      border: 1px solid #08080a !important;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #f1e3ad !important;
+      box-shadow: 0 0 10px rgba(197, 160, 89, 0.4) !important;
+    }
+    ::-webkit-scrollbar-corner {
+      background: #08080a !important;
+    }
+
     body.auth-body {
-      background: radial-gradient(circle at 50% 35%, rgba(197, 160, 89, 0.12) 0%, rgba(16, 16, 20, 0.98) 55%, #08080a 100%);
+      background: radial-gradient(circle at 50% 25%, rgba(197, 160, 89, 0.14) 0%, rgba(16, 16, 20, 0.98) 55%, #08080a 100%);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 24px;
+      padding: 32px 16px;
+      font-family: var(--font-sans);
+      color: var(--text-main);
+      overflow-x: hidden;
     }
 
-    .auth-card {
+    .auth-container {
       width: 100%;
-      max-width: 440px;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 40px 32px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px var(--gold-glow);
-      backdrop-filter: blur(12px);
+      max-width: 620px;
       text-align: center;
       position: relative;
+      z-index: 2;
     }
 
     .brand-crest {
-      width: 64px;
-      height: 64px;
-      border-radius: 16px;
-      background: var(--gold-subtle);
-      border: 1px solid var(--card-border);
+      width: 68px;
+      height: 68px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(197, 160, 89, 0.22) 0%, rgba(197, 160, 89, 0.05) 100%);
+      border: 1px solid rgba(197, 160, 89, 0.4);
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 20px auto;
-      color: var(--gold-light);
+      margin: 0 auto 16px auto;
+      color: var(--gold-primary);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 25px var(--gold-glow);
     }
 
     .brand-title {
       font-family: var(--font-serif);
-      font-size: 1.75rem;
+      font-size: 2.1rem;
       font-weight: 800;
       letter-spacing: 0.5px;
-      background: var(--gold-gradient);
+      background: linear-gradient(135deg, #f8f1d8 0%, #d4af37 50%, #997836 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
+      line-height: 1.15;
     }
 
     .brand-subtitle {
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       color: var(--text-sub);
       text-transform: uppercase;
-      letter-spacing: 1.5px;
-      font-weight: 600;
-      margin-bottom: 28px;
+      letter-spacing: 1.8px;
+      font-weight: 700;
+      margin-bottom: 32px;
     }
 
-    .form-group {
+    /* Vista de Seleção de Usuários (Cards) */
+    .profile-selection-section {
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .selection-instruction {
+      font-size: 0.85rem;
+      color: var(--text-sub);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-bottom: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .selection-instruction span {
+      color: var(--gold-light);
+      font-weight: 700;
+    }
+
+    .profiles-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 26px;
+    }
+
+    @media (max-width: 600px) {
+      .profiles-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+    }
+
+    .profile-card {
+      background: rgba(18, 18, 24, 0.85);
+      border: 1px solid rgba(197, 160, 89, 0.22);
+      border-radius: 18px;
+      padding: 24px 14px 20px 14px;
+      cursor: pointer;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .profile-card:hover {
+      border-color: var(--gold-primary);
+      background: rgba(26, 26, 36, 0.95);
+      transform: translateY(-5px);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(197, 160, 89, 0.3);
+    }
+
+    .profile-avatar-wrapper {
+      position: relative;
+      width: 82px;
+      height: 82px;
+      margin-bottom: 14px;
+    }
+
+    .profile-avatar-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--gold-primary);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+      transition: transform 0.3s ease;
+    }
+
+    .profile-card:hover .profile-avatar-img {
+      transform: scale(1.06);
+      box-shadow: 0 0 20px var(--gold-glow);
+    }
+
+    .profile-status-dot {
+      position: absolute;
+      bottom: 2px;
+      right: 4px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #10b981;
+      border: 2px solid #0d0d12;
+      box-shadow: 0 0 8px #10b981;
+    }
+
+    .profile-name {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 4px;
+      letter-spacing: 0.2px;
+    }
+
+    .profile-role-tag {
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      display: inline-block;
+    }
+
+    .tag-admin {
+      background: rgba(197, 160, 89, 0.18);
+      color: var(--gold-light);
+      border: 1px solid rgba(197, 160, 89, 0.4);
+    }
+
+    .tag-vendas {
+      background: rgba(16, 185, 129, 0.15);
+      color: #6ee7b7;
+      border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+
+    .tag-comercial {
+      background: rgba(59, 130, 246, 0.15);
+      color: #93c5fd;
+      border: 1px solid rgba(59, 130, 246, 0.35);
+    }
+
+    .profile-desc {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      line-height: 1.35;
+      max-width: 150px;
+    }
+
+    .profile-action-hint {
+      margin-top: 14px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--gold-primary);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: all 0.2s ease;
+    }
+
+    .profile-card:hover .profile-action-hint {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Vista Ativa Individual (Quando um Usuário é Selecionado ou via Sublink) */
+    .active-user-panel {
+      display: none;
+      background: rgba(18, 18, 24, 0.92);
+      border: 1px solid rgba(197, 160, 89, 0.4);
+      border-radius: 24px;
+      padding: 36px 30px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 35px var(--gold-glow);
+      backdrop-filter: blur(20px);
+      text-align: center;
+      position: relative;
+      animation: zoomInPanel 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes zoomInPanel {
+      from {
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .active-avatar-halo {
+      position: relative;
+      width: 104px;
+      height: 104px;
+      margin: 0 auto 18px auto;
+    }
+
+    .active-avatar-halo::before {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, transparent 0%, #c5a059 40%, #f1e3ad 50%, #c5a059 60%, transparent 100%);
+      animation: rotateGlow 4s linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes rotateGlow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .active-avatar-img {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #08080a;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.8);
+    }
+
+    .active-welcome-title {
+      font-family: var(--font-serif);
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .active-user-role-label {
+      font-size: 0.78rem;
+      color: var(--gold-primary);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 22px;
+    }
+
+    .active-input-group {
       text-align: left;
       margin-bottom: 18px;
     }
 
-    .form-label {
+    .active-input-label {
       display: block;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 700;
-      color: var(--gold-light);
+      color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.8px;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
-    .form-input {
+    .active-input-box {
       width: 100%;
       padding: 12px 16px;
-      background: #0a0a0e;
-      border: 1px solid var(--card-border);
+      background: #09090c;
+      border: 1px solid rgba(197, 160, 89, 0.3);
       border-radius: 10px;
-      color: var(--text-main);
+      color: #fff;
       font-family: var(--font-sans);
-      font-size: 0.9rem;
-      transition: var(--transition-smooth);
+      font-size: 0.92rem;
       outline: none;
+      transition: all 0.2s ease;
     }
 
-    .form-input:focus {
+    .active-input-box:focus {
       border-color: var(--gold-primary);
       box-shadow: 0 0 15px var(--gold-glow);
     }
 
-    .btn-submit {
+    .btn-enter-system {
       width: 100%;
-      padding: 14px;
-      background: var(--gold-gradient);
+      padding: 15px;
+      background: linear-gradient(135deg, #f1e3ad 0%, #c5a059 50%, #997836 100%);
       border: none;
-      border-radius: 10px;
+      border-radius: 12px;
       color: #08080a;
-      font-weight: 800;
-      font-size: 0.92rem;
+      font-weight: 900;
+      font-size: 0.95rem;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 1.2px;
       cursor: pointer;
-      margin-top: 10px;
-      transition: var(--transition-smooth);
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
+      box-shadow: 0 8px 25px rgba(197, 160, 89, 0.35);
+      transition: all 0.25s ease;
+      margin-top: 8px;
     }
 
-    .btn-submit:hover {
-      box-shadow: 0 8px 25px var(--gold-glow);
+    .btn-enter-system:hover {
+      box-shadow: 0 12px 35px rgba(197, 160, 89, 0.55);
       transform: translateY(-2px);
     }
 
-    .quick-logins-title {
-      font-size: 0.72rem;
+    .btn-switch-user {
+      background: transparent;
+      border: none;
       color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      margin: 28px 0 14px 0;
-      position: relative;
-    }
-
-    .quick-logins-title::before, .quick-logins-title::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      width: 25%;
-      height: 1px;
-      background: rgba(197, 160, 89, 0.15);
-    }
-    .quick-logins-title::before { left: 0; }
-    .quick-logins-title::after { right: 0; }
-
-    .quick-cards-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .quick-user-card {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 14px;
-      background: #0d0d12;
-      border: 1px solid var(--card-border);
-      border-radius: 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
       cursor: pointer;
-      text-align: left;
-      transition: var(--transition-smooth);
-    }
-
-    .quick-user-card:hover {
-      border-color: var(--gold-primary);
-      background: var(--gold-subtle);
-      transform: translateX(3px);
-    }
-
-    .quick-user-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 1px solid var(--card-border);
-    }
-
-    .quick-user-info {
-      flex: 1;
-    }
-
-    .quick-user-name {
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: var(--text-main);
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 6px;
+      margin-top: 18px;
+      transition: color 0.2s ease;
     }
 
-    .quick-user-role {
-      font-size: 0.7rem;
-      color: var(--gold-primary);
-    }
-
-    .role-badge-admin {
-      background: var(--gold-subtle);
+    .btn-switch-user:hover {
       color: var(--gold-light);
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 0.65rem;
-      font-weight: 800;
+    }
+
+    /* Links e Rodapé */
+    .system-direct-links {
+      margin-top: 28px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .direct-link-pill {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s ease;
+    }
+
+    .direct-link-pill:hover {
+      color: var(--gold-primary);
+      border-color: rgba(197, 160, 89, 0.35);
+      background: rgba(197, 160, 89, 0.08);
+    }
+
+    .auth-security-notice {
+      margin-top: 24px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
   </style>
 </head>
 <body class="auth-body">
 
-  <div class="auth-card">
+  <div class="auth-container">
+    <!-- Brand Crest -->
     <div class="brand-crest">
-      <i data-lucide="wine" style="width: 30px; height: 30px;"></i>
+      <i data-lucide="wine" style="width: 32px; height: 32px;"></i>
     </div>
 
-    <h1 class="brand-title">Festblend Cuiabá</h1>
-    <p class="brand-subtitle">Console Executivo · Bar para Eventos 360°</p>
+    <h1 class="brand-title">Festblend Cuiabá 360</h1>
+    <p class="brand-subtitle">Console Executivo · Bar para Eventos & Coquetelaria</p>
 
-    <form id="loginForm" onsubmit="handleLogin(event)">
-      <div class="form-group">
-        <label class="form-label" for="email">E-mail Corporativo</label>
-        <input type="email" id="email" class="form-input" placeholder="seu.nome@festblend.com.br" required value="eduardo@festblend.com.br">
+    <!-- 1. VISTA: SELEÇÃO DE PERFIL COM CARDS INTERATIVOS -->
+    <div id="selectionView" class="profile-selection-section">
+      <div class="selection-instruction">
+        <i data-lucide="users" style="width: 15px; height: 15px; color: var(--gold-primary);"></i>
+        Selecione o seu perfil para autenticação:
       </div>
 
-      <div class="form-group">
-        <label class="form-label" for="password">Senha de Segurança</label>
-        <input type="password" id="password" class="form-input" placeholder="••••••••" required value="festblend2026">
-      </div>
-
-      <button type="submit" class="btn-submit">
-        <i data-lucide="lock" style="width: 16px; height: 16px;"></i>
-        Acessar Painel 360°
-      </button>
-    </form>
-
-    <div class="quick-logins-title">Acesso Rápido por Perfil</div>
-
-    <div class="quick-cards-grid">
-      <!-- Eduardo Master -->
-      <div class="quick-user-card" onclick="quickLogin('eduardo@festblend.com.br')">
-        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" alt="Eduardo" class="quick-user-avatar">
-        <div class="quick-user-info">
-          <div class="quick-user-name">
-            Eduardo Almeida (Dudu)
-            <span class="role-badge-admin">MASTER</span>
+      <div class="profiles-grid">
+        <!-- Card 1: Carlos Eduardo (Dudu) -->
+        <div class="profile-card" onclick="selectProfile('carlos')">
+          <div class="profile-avatar-wrapper">
+            <img src="assets/carlos_eduardo.png" alt="Carlos Eduardo" class="profile-avatar-img" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'">
+            <div class="profile-status-dot"></div>
           </div>
-          <div class="quick-user-role">Diretoria Geral · Visão Completa God Mode</div>
+          <div class="profile-name">Carlos Eduardo</div>
+          <span class="profile-role-tag tag-admin">DIRETORIA GERAL</span>
+          <div class="profile-desc">Proprietário · Visão Completa God Mode & Finanças</div>
+          <div class="profile-action-hint">
+            <span>Acessar</span>
+            <i data-lucide="arrow-right" style="width: 12px; height: 12px;"></i>
+          </div>
         </div>
-        <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: var(--gold-primary);"></i>
+
+        <!-- Card 2: Ana Paula Serra -->
+        <div class="profile-card" onclick="selectProfile('anapaula')">
+          <div class="profile-avatar-wrapper">
+            <img src="assets/ana_paula.png" alt="Ana Paula Serra" class="profile-avatar-img" onerror="this.src='https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150'">
+            <div class="profile-status-dot"></div>
+          </div>
+          <div class="profile-name">Ana Paula Serra</div>
+          <span class="profile-role-tag tag-vendas">CLOSER VENDAS</span>
+          <div class="profile-desc">Gestão Financeira, Sinais PIX & Fechamentos</div>
+          <div class="profile-action-hint">
+            <span>Acessar</span>
+            <i data-lucide="arrow-right" style="width: 12px; height: 12px;"></i>
+          </div>
+        </div>
+
+        <!-- Card 3: Ruben Ribeiro -->
+        <div class="profile-card" onclick="selectProfile('ruben')">
+          <div class="profile-avatar-wrapper">
+            <img src="assets/ruben_ribeiro.png" alt="Ruben Ribeiro" class="profile-avatar-img" onerror="this.src='https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150'">
+            <div class="profile-status-dot"></div>
+          </div>
+          <div class="profile-name">Ruben Ribeiro</div>
+          <span class="profile-role-tag tag-comercial">COMERCIAL</span>
+          <div class="profile-desc">Atendimento Corporativo & Noivas Cuiabá</div>
+          <div class="profile-action-hint">
+            <span>Acessar</span>
+            <i data-lucide="arrow-right" style="width: 12px; height: 12px;"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. VISTA: PAINEL DE AUTENTICAÇÃO DO USUÁRIO ATIVO (EXPANDIDO) -->
+    <div id="activeUserView" class="active-user-panel">
+      <div class="active-avatar-halo">
+        <img id="activeAvatarImg" src="assets/carlos_eduardo.png" alt="Avatar" class="active-avatar-img">
       </div>
 
-      <!-- Ana Paula Closer & Financeiro -->
-      <div class="quick-user-card" onclick="quickLogin('anapaula@festblend.com.br')">
-        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150" alt="Ana Paula" class="quick-user-avatar">
-        <div class="quick-user-info">
-          <div class="quick-user-name">Ana Paula Serra</div>
-          <div class="quick-user-role">Closer Vendas & Gestão Financeira Festblend</div>
-        </div>
-        <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
-      </div>
+      <div class="active-welcome-title" id="activeWelcomeTitle">Bem-vindo, Carlos Eduardo!</div>
+      <div class="active-user-role-label" id="activeRoleLabel">Diretoria Geral & Proprietário</div>
 
-      <!-- Ruben Comercial -->
-      <div class="quick-user-card" onclick="quickLogin('ruben@festblend.com.br')">
-        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150" alt="Ruben" class="quick-user-avatar">
-        <div class="quick-user-info">
-          <div class="quick-user-name">Ruben Ribeiro</div>
-          <div class="quick-user-role">Closer Comercial & Eventos Corporativos Cuiabá</div>
+      <form id="activeAuthForm" onsubmit="submitActiveLogin(event)">
+        <div class="active-input-group">
+          <label class="active-input-label" for="activePasswordInput">Senha de Segurança</label>
+          <input type="password" id="activePasswordInput" class="active-input-box" placeholder="••••••••" value="festblend2026" required>
         </div>
-        <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
-      </div>
+
+        <button type="submit" class="btn-enter-system" id="btnEnterSystem">
+          <i data-lucide="lock" style="width: 18px; height: 18px;"></i>
+          <span>Entrar no Painel 360°</span>
+        </button>
+      </form>
+
+      <button type="button" class="btn-switch-user" onclick="resetToSelectionView()">
+        <i data-lucide="chevron-left" style="width: 14px; height: 14px;"></i>
+        <span>Trocar de perfil</span>
+      </button>
+    </div>
+
+    <!-- Sublinks Rápidos e Diretos -->
+    <div class="system-direct-links">
+      <a href="login.html?user=carlos" class="direct-link-pill" title="Atalho direto para Carlos Eduardo">
+        <i data-lucide="link" style="width: 11px; height: 11px;"></i> Link Carlos Eduardo
+      </a>
+      <a href="login.html?user=anapaula" class="direct-link-pill" title="Atalho direto para Ana Paula">
+        <i data-lucide="link" style="width: 11px; height: 11px;"></i> Link Ana Paula
+      </a>
+      <a href="login.html?user=ruben" class="direct-link-pill" title="Atalho direto para Ruben Ribeiro">
+        <i data-lucide="link" style="width: 11px; height: 11px;"></i> Link Ruben Ribeiro
+      </a>
+    </div>
+
+    <!-- Aviso de Segurança -->
+    <div class="auth-security-notice">
+      <i data-lucide="shield-check" style="width: 14px; height: 14px; color: var(--gold-primary);"></i>
+      <span>Ambiente Criptografado SSL · Conexão Cloudflare D1 em Cuiabá/MT</span>
     </div>
   </div>
 
   <script>
     lucide.createIcons();
 
-    function handleLogin(e) {
+    const PROFILES_DATA = {
+      carlos: {
+        id: 'eduardo',
+        slug: 'carlos',
+        email: 'carlos@festblend.com.br',
+        name: 'Carlos Eduardo (Dudu)',
+        displayName: 'Carlos Eduardo',
+        title: 'Diretoria Geral & Proprietário',
+        avatar: 'assets/carlos_eduardo.png',
+        role: 'admin',
+        permissions: ['all_chats', 'financials', 'date_radar', 'settings', 'reassign_leads']
+      },
+      anapaula: {
+        id: 'anapaula',
+        slug: 'anapaula',
+        email: 'anapaula@festblend.com.br',
+        name: 'Ana Paula Serra',
+        displayName: 'Ana Paula Serra',
+        title: 'Closer Vendas & Financeiro Festblend',
+        avatar: 'assets/ana_paula.png',
+        role: 'vendedor',
+        permissions: ['own_chats', 'own_kanban', 'financials']
+      },
+      ruben: {
+        id: 'ruben',
+        slug: 'ruben',
+        email: 'ruben@festblend.com.br',
+        name: 'Ruben Ribeiro',
+        displayName: 'Ruben Ribeiro',
+        title: 'Closer Comercial & Eventos Cuiabá',
+        avatar: 'assets/ruben_ribeiro.png',
+        role: 'vendedor',
+        permissions: ['own_chats', 'own_kanban']
+      }
+    };
+
+    let selectedUserSlug = null;
+
+    // Detectar query params na inicialização
+    window.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const userParam = (params.get('user') || params.get('u') || '').toLowerCase().trim();
+
+      if (userParam) {
+        if (['carlos', 'dudu', 'eduardo'].includes(userParam)) {
+          selectProfile('carlos', false);
+        } else if (['ana', 'anapaula', 'paula'].includes(userParam)) {
+          selectProfile('anapaula', false);
+        } else if (['ruben', 'rubens'].includes(userParam)) {
+          selectProfile('ruben', false);
+        }
+      }
+    });
+
+    function selectProfile(slug, updateUrl = true) {
+      const user = PROFILES_DATA[slug];
+      if (!user) return;
+
+      selectedUserSlug = slug;
+
+      // Atualizar painel ativo
+      document.getElementById('activeAvatarImg').src = user.avatar;
+      document.getElementById('activeWelcomeTitle').textContent = `Bem-vindo(a), ${user.displayName}!`;
+      document.getElementById('activeRoleLabel').textContent = user.title;
+      document.getElementById('activePasswordInput').value = 'festblend2026';
+
+      // Transição visual fluida
+      const selectionView = document.getElementById('selectionView');
+      const activeView = document.getElementById('activeUserView');
+
+      selectionView.style.display = 'none';
+      activeView.style.display = 'block';
+
+      if (updateUrl && window.history.replaceState) {
+        const url = new URL(window.location);
+        url.searchParams.set('user', slug);
+        window.history.replaceState({}, '', url);
+      }
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function resetToSelectionView() {
+      selectedUserSlug = null;
+      document.getElementById('selectionView').style.display = 'block';
+      document.getElementById('activeUserView').style.display = 'none';
+
+      if (window.history.replaceState) {
+        const url = new URL(window.location);
+        url.searchParams.delete('user');
+        window.history.replaceState({}, '', url);
+      }
+    }
+
+    function submitActiveLogin(e) {
       e.preventDefault();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value.trim();
-      processLogin(email, password);
-    }
+      if (!selectedUserSlug || !PROFILES_DATA[selectedUserSlug]) {
+        alert('Por favor, selecione um perfil.');
+        return;
+      }
 
-    function quickLogin(email) {
-      document.getElementById('email').value = email;
-      document.getElementById('password').value = 'festblend2026';
-      processLogin(email, 'festblend2026');
-    }
+      const user = PROFILES_DATA[selectedUserSlug];
+      const password = document.getElementById('activePasswordInput').value.trim();
 
-    function processLogin(email, password) {
-      const user = FESTBLEND_PRESET_USERS[email];
-      if (!user) {
-        alert('Credenciais não cadastradas no sistema Festblend.');
+      if (!password) {
+        alert('Por favor, informe a senha de segurança.');
         return;
       }
 
       const sessionData = {
         id: user.id,
+        slug: user.slug,
         name: user.name,
         role: user.role,
         title: user.title,
         email: user.email,
         avatar: user.avatar,
         permissions: user.permissions,
-        token: 'fb_token_' + Math.random().toString(36).substring(2) + Date.now().toString(36),
+        token: 'festblend_active_' + user.id + '_' + Date.now().toString(36),
         loggedAt: new Date().toISOString()
       };
 
       setFestblendSession(sessionData);
 
-      // Redirecionamento
+      // Redirecionamento inteligente
       const params = new URLSearchParams(window.location.search);
       const redirect = params.get('redirect');
       if (redirect && !redirect.includes('login.html')) {

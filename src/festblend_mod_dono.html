@@ -185,7 +185,7 @@
   <header class="dono-header">
     <div class="dono-title-group">
       <h2>Painel do Dono & Radar de Eventos 360°</h2>
-      <p>Visão Executiva Privativa de Eduardo Almeida · Monitoramento de Datas, Travas e Performance</p>
+      <p>Visão Executiva Privativa de Carlos Eduardo (Dudu) · Monitoramento de Datas, Travas e Performance</p>
     </div>
 
     <div class="badge-gold">
@@ -338,10 +338,10 @@
         <tr>
           <td>
             <div class="seller-avatar-cell">
-              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" alt="Eduardo" class="seller-avatar-img">
+              <img src="assets/carlos_eduardo.png" alt="Carlos Eduardo" class="seller-avatar-img" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'">
               <div>
-                <strong>Eduardo Almeida (Dudu)</strong>
-                <div style="font-size:0.7rem;color:var(--text-muted);">eduardo@festblend.com.br</div>
+                <strong>Carlos Eduardo (Dudu)</strong>
+                <div style="font-size:0.7rem;color:var(--text-muted);">carlos@festblend.com.br</div>
               </div>
             </div>
           </td>
@@ -361,7 +361,7 @@
         <tr>
           <td>
             <div class="seller-avatar-cell">
-              <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150" alt="Ana Paula" class="seller-avatar-img">
+              <img src="assets/ana_paula.png" alt="Ana Paula" class="seller-avatar-img" onerror="this.src='https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150'">
               <div>
                 <strong>Ana Paula Serra</strong>
                 <div style="font-size:0.7rem;color:var(--text-muted);">anapaula@festblend.com.br</div>
@@ -384,7 +384,7 @@
         <tr>
           <td>
             <div class="seller-avatar-cell">
-              <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150" alt="Ruben" class="seller-avatar-img">
+              <img src="assets/ruben_ribeiro.png" alt="Ruben" class="seller-avatar-img" onerror="this.src='https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150'">
               <div>
                 <strong>Ruben Ribeiro</strong>
                 <div style="font-size:0.7rem;color:var(--text-muted);">ruben@festblend.com.br</div>
@@ -413,6 +413,20 @@
     document.addEventListener('DOMContentLoaded', async () => {
       const session = checkFestblendAuth('admin');
       if (!session) return;
+
+      try {
+        const countRes = await queryD1('SELECT count(*) as total FROM festblend_chat_threads;');
+        if (countRes && countRes[0] && typeof countRes[0].total !== 'undefined') {
+          const totalContacts = countRes[0].total;
+          const kpiMeta = document.querySelector('#kpiClosedTotal + .kpi-card-meta');
+          if (kpiMeta) {
+            kpiMeta.innerHTML = `<i data-lucide="check-circle" style="width:13px;height:13px;color:var(--green);"></i> <span>${totalContacts} contatos reais da extensão D1</span>`;
+            if (window.lucide) lucide.createIcons();
+          }
+        }
+      } catch (err) {
+        console.warn('Erro ao carregar métricas reais D1:', err);
+      }
     });
   </script>
 </body>

@@ -8,29 +8,52 @@ const FESTBLEND_AUTH_KEY = 'festblend_auth_session';
 const FESTBLEND_PRESET_USERS = {
   'eduardo@festblend.com.br': {
     id: 'eduardo',
-    name: 'Eduardo Almeida (Dudu)',
+    slug: 'carlos',
+    name: 'Carlos Eduardo (Dudu)',
     role: 'admin',
     title: 'Diretor Geral & Proprietário',
     email: 'eduardo@festblend.com.br',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+    avatar: 'assets/carlos_eduardo.png',
+    permissions: ['all_chats', 'financials', 'date_radar', 'settings', 'reassign_leads']
+  },
+  'carlos@festblend.com.br': {
+    id: 'eduardo',
+    slug: 'carlos',
+    name: 'Carlos Eduardo (Dudu)',
+    role: 'admin',
+    title: 'Diretor Geral & Proprietário',
+    email: 'carlos@festblend.com.br',
+    avatar: 'assets/carlos_eduardo.png',
     permissions: ['all_chats', 'financials', 'date_radar', 'settings', 'reassign_leads']
   },
   'anapaula@festblend.com.br': {
     id: 'anapaula',
+    slug: 'anapaula',
     name: 'Ana Paula Serra',
     role: 'vendedor',
     title: 'Closer Vendas & Financeiro',
     email: 'anapaula@festblend.com.br',
-    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150',
+    avatar: 'assets/ana_paula.png',
+    permissions: ['own_chats', 'own_kanban', 'financials']
+  },
+  'ana@festblend.com.br': {
+    id: 'anapaula',
+    slug: 'anapaula',
+    name: 'Ana Paula Serra',
+    role: 'vendedor',
+    title: 'Closer Vendas & Financeiro',
+    email: 'anapaula@festblend.com.br',
+    avatar: 'assets/ana_paula.png',
     permissions: ['own_chats', 'own_kanban', 'financials']
   },
   'ruben@festblend.com.br': {
     id: 'ruben',
+    slug: 'ruben',
     name: 'Ruben Ribeiro',
     role: 'vendedor',
     title: 'Closer Comercial & Eventos',
     email: 'ruben@festblend.com.br',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
+    avatar: 'assets/ruben_ribeiro.png',
     permissions: ['own_chats', 'own_kanban']
   }
 };
@@ -46,6 +69,9 @@ function getFestblendSession() {
 }
 
 function setFestblendSession(sessionData) {
+  if (sessionData && !sessionData.token) {
+    sessionData.token = 'festblend_active_' + (sessionData.id || 'usr') + '_' + Date.now().toString(36);
+  }
   localStorage.setItem(FESTBLEND_AUTH_KEY, JSON.stringify(sessionData));
 }
 
