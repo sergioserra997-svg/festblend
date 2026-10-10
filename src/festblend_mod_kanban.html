@@ -17,196 +17,472 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="css/theme.css">
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/d1_client.js"></script>
 
   <style>
+    /* Universal Custom Luxury Scrollbar - 100% Theme Matched (Regra 1P) */
+    * {
+      box-sizing: border-box;
+      scrollbar-width: thin !important;
+      scrollbar-color: #c5a059 #08080a !important;
+    }
+    ::-webkit-scrollbar {
+      width: 6px !important;
+      height: 6px !important;
+    }
+    ::-webkit-scrollbar-track {
+      background: #08080a !important;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #f1e3ad 0%, #c5a059 50%, #997836 100%) !important;
+      border-radius: 10px !important;
+      border: 1px solid #08080a !important;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #f1e3ad !important;
+      box-shadow: 0 0 10px rgba(197, 160, 89, 0.4) !important;
+    }
+
+    :root {
+      --bg-deep: #08080a;
+      --bg-surface: #101014;
+      --card-bg: #14141a;
+      --card-bg-elevated: #181824;
+      --card-border: rgba(197, 160, 89, 0.18);
+      --card-border-hover: rgba(197, 160, 89, 0.45);
+      
+      --gold-primary: #c5a059;
+      --gold-light: #f1e3ad;
+      --gold-dark: #997836;
+      --gold-gradient: linear-gradient(135deg, #f1e3ad 0%, #c5a059 50%, #997836 100%);
+      --gold-glow: rgba(197, 160, 89, 0.28);
+      --gold-subtle: rgba(197, 160, 89, 0.08);
+      
+      --text-main: #f8f9fa;
+      --text-sub: #a0a0b0;
+      --text-muted: #6c757d;
+      
+      --green: #10b981;
+      --red: #ef4444;
+      --yellow: #f59e0b;
+      --blue: #38bdf8;
+      --purple: #a855f7;
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
     body {
       background: var(--bg-deep);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      margin: 0;
+      padding: 16px 20px 24px 20px;
       height: 100vh;
       overflow: hidden;
       display: flex;
       flex-direction: column;
     }
 
-    /* Top Stats Header */
-    .kanban-header {
-      padding: 16px 20px;
-      background: var(--bg-surface);
-      border-bottom: 1px solid var(--card-border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    /* Metrics Top Bar (Estilo Oficial Bethel) */
+    .metrics-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-bottom: 14px;
       flex-shrink: 0;
     }
 
-    .k-header-left {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .k-title {
-      font-family: var(--font-serif);
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: var(--text-main);
-    }
-
-    .k-stats-row {
+    .metric-card {
+      background: linear-gradient(135deg, rgba(20, 20, 26, 0.9) 0%, rgba(16, 16, 20, 0.95) 100%);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px 16px;
       display: flex;
       align-items: center;
       gap: 14px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+      transition: all 0.2s ease;
     }
 
-    .stat-pill {
-      background: #0a0a0e;
-      border: 1px solid var(--card-border);
-      border-radius: 8px;
-      padding: 6px 12px;
+    .metric-card:hover {
+      border-color: var(--gold-primary);
+      transform: translateY(-2px);
+    }
+
+    .metric-card.closed-highlight {
+      border-color: rgba(16, 185, 129, 0.35);
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 16, 20, 0.95) 100%);
+    }
+
+    .metric-icon-wrap {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: rgba(197, 160, 89, 0.12);
+      border: 1px solid rgba(197, 160, 89, 0.25);
+      color: var(--gold-primary);
       display: flex;
       align-items: center;
-      gap: 8px;
+      justify-content: center;
+      flex-shrink: 0;
     }
 
-    .stat-pill-label {
-      font-size: 0.65rem;
-      text-transform: uppercase;
-      color: var(--text-muted);
+    .metric-card.closed-highlight .metric-icon-wrap {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.35);
+      color: var(--green);
+    }
+
+    .metric-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .metric-label {
+      font-size: 0.70rem;
       font-weight: 700;
+      color: var(--text-sub);
+      text-transform: uppercase;
       letter-spacing: 0.5px;
     }
 
-    .stat-pill-val {
+    .metric-value {
+      font-size: 1.18rem;
+      font-weight: 900;
+      color: var(--gold-primary);
+      letter-spacing: -0.5px;
+      line-height: 1.2;
       font-family: var(--font-mono);
-      font-size: 0.85rem;
-      font-weight: 800;
+    }
+
+    .metric-card.closed-highlight .metric-value {
+      color: var(--green);
+    }
+
+    .metric-sub {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+    }
+
+    /* Date Filter Bar & Seller Switcher */
+    .date-filter-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 14px;
+      background: linear-gradient(135deg, rgba(26, 26, 36, 0.95) 0%, rgba(16, 16, 22, 0.98) 100%);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 8px 14px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+      flex-shrink: 0;
+    }
+
+    .date-filter-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .seller-pill-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--bg-deep);
+      border: 1px solid var(--card-border);
+      padding: 3px 6px;
+      border-radius: 8px;
+    }
+
+    .seller-pill-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-sub);
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .seller-pill-btn:hover {
+      color: var(--text-main);
+    }
+
+    .seller-pill-btn.active {
+      background: var(--gold-gradient);
+      color: #08080a;
+      box-shadow: 0 2px 6px var(--gold-glow);
+    }
+
+    .date-pill-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--bg-deep);
+      border: 1px solid var(--card-border);
+      padding: 3px 6px;
+      border-radius: 8px;
+    }
+
+    .date-pill-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-sub);
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .date-pill-btn:hover {
+      color: var(--text-main);
+    }
+
+    .date-pill-btn.active {
+      background: rgba(197, 160, 89, 0.25);
+      border: 1px solid var(--gold-primary);
       color: var(--gold-light);
     }
 
-    /* Kanban Board Container */
-    .board-container {
-      flex: 1;
+    .date-filter-right {
       display: flex;
-      gap: 14px;
-      padding: 18px 20px;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .search-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-input-wrap input {
+      background: var(--bg-deep);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 6px 10px 6px 30px;
+      border-radius: 8px;
+      font-size: 0.76rem;
+      width: 190px;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .search-input-wrap input:focus {
+      border-color: var(--gold-primary);
+      width: 230px;
+    }
+
+    .search-input-wrap i {
+      position: absolute;
+      left: 9px;
+      width: 14px;
+      height: 14px;
+      color: var(--text-muted);
+    }
+
+    .btn-new-lead {
+      background: var(--gold-gradient);
+      border: none;
+      color: #08080a;
+      font-weight: 800;
+      font-size: 0.76rem;
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 8px var(--gold-glow);
+      transition: all 0.2s ease;
+    }
+
+    .btn-new-lead:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(197, 160, 89, 0.5);
+    }
+
+    /* Kanban Board Layout & Scroll */
+    .board-scroll-wrapper {
+      flex: 1;
+      width: 100%;
       overflow-x: auto;
       overflow-y: hidden;
+      padding-bottom: 8px;
+    }
+
+    .kanban-board {
+      display: flex;
+      gap: 14px;
+      min-width: 2200px;
+      height: 100%;
+      align-items: stretch;
     }
 
     .kanban-column {
-      width: 300px;
-      min-width: 300px;
-      background: var(--card-bg);
+      flex: 0 0 280px;
+      width: 280px;
+      background: var(--bg-surface);
       border: 1px solid var(--card-border);
-      border-radius: 14px;
+      border-radius: 12px;
+      padding: 10px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.25);
       display: flex;
       flex-direction: column;
-      overflow: hidden;
+      height: 100%;
     }
 
-    .column-header {
-      padding: 12px 14px;
-      background: #0e0e13;
-      border-bottom: 1px solid var(--card-border);
+    .column-header-box {
+      background: var(--card-bg-elevated);
+      border: 1px solid rgba(197, 160, 89, 0.15);
+      border-radius: 9px;
+      padding: 8px 10px;
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+      margin-bottom: 8px;
     }
 
-    .col-title-group {
+    .column-title {
+      font-size: 0.76rem;
+      font-weight: 800;
+      color: var(--gold-primary);
       display: flex;
       align-items: center;
-      gap: 8px;
-    }
-
-    .col-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--gold-primary);
-    }
-
-    .col-title {
-      font-size: 0.78rem;
-      font-weight: 800;
-      color: var(--text-main);
+      gap: 6px;
       text-transform: uppercase;
-      letter-spacing: 0.6px;
+      letter-spacing: 0.4px;
     }
 
-    .col-counter {
-      font-size: 0.7rem;
-      font-weight: 700;
-      background: var(--gold-subtle);
-      color: var(--gold-light);
-      padding: 2px 7px;
-      border-radius: 10px;
+    .column-badges-wrap {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .column-count {
+      background: rgba(197, 160, 89, 0.15);
+      color: var(--gold-primary);
+      padding: 2px 6px;
+      border-radius: 5px;
+      font-size: 0.68rem;
+      font-weight: 800;
       font-family: var(--font-mono);
     }
 
-    .column-cards-list {
-      flex: 1;
-      overflow-y: auto;
-      padding: 12px;
+    .column-sum {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-sub);
+      padding: 2px 6px;
+      border-radius: 5px;
+      font-size: 0.66rem;
+      font-weight: 700;
+      white-space: nowrap;
+      font-family: var(--font-mono);
+    }
+
+    .column-sum.sum-fechado {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--green);
+    }
+
+    .card-container {
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      min-height: 150px;
+      gap: 8px;
+      flex: 1;
+      overflow-y: auto !important;
+      padding: 2px 4px 6px 2px;
+      border-radius: 8px;
     }
 
-    .column-cards-list.drag-over {
+    .card-container.drag-over {
       background: rgba(197, 160, 89, 0.05);
       border: 1px dashed var(--gold-primary);
-      border-radius: 10px;
     }
 
-    /* Kanban Event Card */
+    /* Event Card (Padrão Bethel Luxury) */
     .event-card {
-      background: #0f1015;
+      background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 10px;
-      padding: 12px;
+      border-radius: 9px;
+      padding: 10px 12px;
       cursor: grab;
-      transition: var(--transition-smooth);
-      position: relative;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
 
     .event-card:hover {
       border-color: var(--gold-primary);
-      box-shadow: 0 4px 15px var(--gold-glow);
       transform: translateY(-2px);
+      box-shadow: 0 6px 14px var(--gold-glow);
     }
 
-    .card-top-row {
+    .card-header-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 6px;
+      gap: 6px;
     }
 
     .card-client-name {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 800;
       color: var(--text-main);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
-    .card-tag {
-      font-size: 0.65rem;
+    .card-event-badge {
+      font-size: 0.62rem;
       padding: 2px 6px;
       border-radius: 4px;
       font-weight: 700;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
     }
 
-    .card-middle-info {
-      font-size: 0.73rem;
-      color: var(--text-sub);
-      margin-bottom: 8px;
+    .badge-casamento { background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge-15anos { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
+    .badge-formatura { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+    .badge-corporativo { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-geral { background: rgba(197, 160, 89, 0.15); color: var(--gold-light); border: 1px solid rgba(197, 160, 89, 0.3); }
+
+    .card-info-row {
       display: flex;
-      flex-direction: column;
-      gap: 3px;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.70rem;
+      color: var(--text-sub);
+    }
+
+    .card-info-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .card-footer-row {
@@ -214,112 +490,375 @@
       align-items: center;
       justify-content: space-between;
       border-top: 1px solid rgba(197, 160, 89, 0.1);
-      padding-top: 8px;
-      margin-top: 6px;
+      padding-top: 6px;
+      margin-top: 2px;
     }
 
-    .card-value {
+    .card-deal-value {
       font-family: var(--font-mono);
-      font-size: 0.82rem;
+      font-size: 0.80rem;
       font-weight: 800;
-      color: var(--gold-light);
+      color: var(--gold-primary);
     }
 
-    .card-seller-pill {
-      font-size: 0.68rem;
-      color: var(--text-muted);
+    .card-actions-group {
       display: flex;
       align-items: center;
       gap: 4px;
+    }
+
+    .card-action-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-sub);
+      padding: 3px 6px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.65rem;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .card-action-btn:hover {
+      background: rgba(197, 160, 89, 0.2);
+      border-color: var(--gold-primary);
+      color: var(--gold-light);
+    }
+
+    .card-seller-avatar {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1px solid var(--gold-primary);
+      object-fit: cover;
+    }
+
+    /* Modal Form */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-box {
+      background: #111218;
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      width: 90%;
+      max-width: 500px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+    }
+
+    .modal-title {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--gold-light);
+      margin: 0 0 14px 0;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--gold-primary);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+
+    .form-input {
+      width: 100%;
+      background: var(--bg-deep);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 0.80rem;
+      outline: none;
+    }
+
+    .form-input:focus {
+      border-color: var(--gold-primary);
+    }
+
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-main);
+      padding: 7px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.78rem;
+    }
+
+    .btn-primary {
+      background: var(--gold-gradient);
+      border: none;
+      color: #08080a;
+      padding: 7px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 800;
+      font-size: 0.78rem;
     }
   </style>
 </head>
 <body>
 
-  <!-- TOPO DE MÉTRICAS -->
-  <header class="kanban-header">
-    <div class="k-header-left">
-      <h2 class="k-title">Pipeline de Eventos & Funil Comercial</h2>
-      <div id="masterSellerFilterKanban" class="seller-filter-pill-group" style="display: none;">
-        <button class="seller-pill active" onclick="filterKanbanBySeller('all')">Todos</button>
-        <button class="seller-pill" onclick="filterKanbanBySeller('eduardo')">Carlos Eduardo</button>
-        <button class="seller-pill" onclick="filterKanbanBySeller('anapaula')">Ana Paula</button>
-        <button class="seller-pill" onclick="filterKanbanBySeller('ruben')">Ruben</button>
+  <!-- TOP METRICS BAR (CANÔNICO BETHEL ADAPTADO FESTBLEND) -->
+  <header class="metrics-bar">
+    <div class="metric-card">
+      <div class="metric-icon-wrap">
+        <i data-lucide="trending-up" style="width: 20px; height: 20px;"></i>
+      </div>
+      <div class="metric-info">
+        <span class="metric-label">Volume em Negociação</span>
+        <span class="metric-value" id="metricVolumeNeg">R$ 0,00</span>
+        <span class="metric-sub" id="metricVolumeSub">0 propostas em andamento</span>
       </div>
     </div>
 
-    <div class="k-stats-row">
-      <div class="stat-pill">
-        <span class="stat-pill-label">Total em Negociação</span>
-        <span class="stat-pill-val" id="kStatTotalNegotiating">R$ 0,00</span>
+    <div class="metric-card closed-highlight">
+      <div class="metric-icon-wrap">
+        <i data-lucide="check-circle-2" style="width: 20px; height: 20px;"></i>
       </div>
-
-      <div class="stat-pill">
-        <span class="stat-pill-label">Contratos Fechados</span>
-        <span class="stat-pill-val" id="kStatTotalClosed">R$ 0,00</span>
+      <div class="metric-info">
+        <span class="metric-label">Contratos Fechados</span>
+        <span class="metric-value" id="metricContratosFechados">R$ 0,00</span>
+        <span class="metric-sub" id="metricContratosSub">0 eventos formalizados</span>
       </div>
+    </div>
 
-      <div class="stat-pill">
-        <span class="stat-pill-label">Convidados Cotados</span>
-        <span class="stat-pill-val" id="kStatTotalGuests">0</span>
+    <div class="metric-card">
+      <div class="metric-icon-wrap">
+        <i data-lucide="users" style="width: 20px; height: 20px;"></i>
       </div>
+      <div class="metric-info">
+        <span class="metric-label">Convidados Cotados</span>
+        <span class="metric-value" id="metricTotalConvidados">0</span>
+        <span class="metric-sub" id="metricConvidadosSub">Dimensionamento total de bar</span>
+      </div>
+    </div>
 
-      <button class="btn-luxury" onclick="alert('Novo evento pode ser cadastrado ou vinculado via WhatsApp.')">
-        <i data-lucide="plus" style="width: 14px; height: 14px;"></i>
-        Novo Lead
-      </button>
+    <div class="metric-card">
+      <div class="metric-icon-wrap">
+        <i data-lucide="banknote" style="width: 20px; height: 20px;"></i>
+      </div>
+      <div class="metric-info">
+        <span class="metric-label">Sinal 30% PIX Pago</span>
+        <span class="metric-value" id="metricSinaisPix">R$ 0,00</span>
+        <span class="metric-sub" id="metricSinaisSub">0 datas travadas na agenda</span>
+      </div>
     </div>
   </header>
 
-  <!-- QUADRO KANBAN (8 COLUNAS) -->
-  <main class="board-container" id="boardContainer">
-    <!-- Colunas geradas dinamicamente com base nas 8 etapas de eventos -->
+  <!-- DATE FILTER BAR & SELLER SWITCHER -->
+  <section class="date-filter-bar">
+    <div class="date-filter-left">
+      <!-- Switcher de Vendedores -->
+      <div class="seller-pill-group" id="sellerFilterGroup">
+        <button class="seller-pill-btn active" onclick="setSellerFilter('all')">
+          <i data-lucide="layout-grid" style="width: 13px; height: 13px;"></i>
+          <span>Todos</span>
+        </button>
+        <button class="seller-pill-btn" onclick="setSellerFilter('eduardo')">
+          <img src="assets/carlos_eduardo.png" class="card-seller-avatar" alt="Carlos" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50'">
+          <span>Carlos Eduardo</span>
+        </button>
+        <button class="seller-pill-btn" onclick="setSellerFilter('anapaula')">
+          <img src="assets/ana_paula.png" class="card-seller-avatar" alt="Ana Paula" onerror="this.src='https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=50'">
+          <span>Ana Paula</span>
+        </button>
+        <button class="seller-pill-btn" onclick="setSellerFilter('ruben')">
+          <img src="assets/ruben_ribeiro.png" class="card-seller-avatar" alt="Ruben" onerror="this.src='https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=50'">
+          <span>Ruben</span>
+        </button>
+      </div>
+
+      <!-- Filtros de Período -->
+      <div class="date-pill-group">
+        <button class="date-pill-btn" id="btn-period-today" onclick="setPeriodFilter('today')">Hoje</button>
+        <button class="date-pill-btn" id="btn-period-7d" onclick="setPeriodFilter('7d')">7 Dias</button>
+        <button class="date-pill-btn" id="btn-period-30d" onclick="setPeriodFilter('30d')">30 Dias</button>
+        <button class="date-pill-btn active" id="btn-period-all" onclick="setPeriodFilter('all')">Todos</button>
+      </div>
+    </div>
+
+    <div class="date-filter-right">
+      <div class="search-input-wrap">
+        <i data-lucide="search"></i>
+        <input type="text" id="kanbanSearchInput" placeholder="Buscar noiva ou evento..." oninput="handleSearch(this.value)">
+      </div>
+
+      <button class="btn-new-lead" onclick="openNewLeadModal()">
+        <i data-lucide="plus" style="width: 14px; height: 14px;"></i>
+        <span>Novo Evento</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- BOARD SCROLL WRAPPER (8 COLUNAS FESTBLEND) -->
+  <main class="board-scroll-wrapper">
+    <div class="kanban-board" id="kanbanBoard">
+      <!-- Colunas geradas via JavaScript -->
+    </div>
   </main>
 
+  <!-- MODAL DE DETALHES / NOVO EVENTO -->
+  <div class="modal-backdrop" id="eventModal" onclick="closeModalOnBackdrop(event)">
+    <div class="modal-box">
+      <h3 class="modal-title" id="modalTitle">Detalhes do Evento</h3>
+      <form id="leadForm" onsubmit="handleSaveLead(event)">
+        <input type="hidden" id="formCardId">
+        <input type="hidden" id="formCardPhone">
+
+        <div class="form-group">
+          <label class="form-label" for="formClientName">Nome da Noiva / Cliente</label>
+          <input type="text" id="formClientName" class="form-input" required placeholder="Ex: Patrícia & Lucas (Casamento)">
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label" for="formPhone">WhatsApp</label>
+            <input type="text" id="formPhone" class="form-input" required placeholder="5565981114321">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="formEventType">Tipo de Evento</label>
+            <select id="formEventType" class="form-input">
+              <option value="Casamento">Casamento</option>
+              <option value="15 Anos">15 Anos</option>
+              <option value="Formatura">Formatura</option>
+              <option value="Corporativo">Corporativo</option>
+              <option value="Aniversário">Aniversário</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label" for="formEventDate">Data do Evento</label>
+            <input type="date" id="formEventDate" class="form-input">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="formGuestCount">Nº de Convidados</label>
+            <input type="number" id="formGuestCount" class="form-input" placeholder="150">
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label" for="formDealValue">Valor da Proposta (R$)</label>
+            <input type="number" step="0.01" id="formDealValue" class="form-input" placeholder="4500.00">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="formStage">Etapa do Funil</label>
+            <select id="formStage" class="form-input">
+              <option value="data_consultada">Data Consultada</option>
+              <option value="qualificacao">Qualificação</option>
+              <option value="cardapio_degustacao">Degustação & Drinks</option>
+              <option value="proposta_enviada">Proposta Enviada</option>
+              <option value="sinal_pix_pago">Sinal 30% PIX Pago</option>
+              <option value="contrato_fechado">Contrato Fechado</option>
+              <option value="data_em_risco">Data em Risco</option>
+              <option value="perdido">Data Liberada</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="formAssignedTo">Operador Responsável</label>
+          <select id="formAssignedTo" class="form-input">
+            <option value="eduardo">Carlos Eduardo (Dudu)</option>
+            <option value="anapaula">Ana Paula Serra</option>
+            <option value="ruben">Ruben Ribeiro</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="formObservations">Observações / Drinks Escolhidos</label>
+          <textarea id="formObservations" class="form-input" rows="2" placeholder="Carta Moscou Mule, Gin Tropical, Whisky Sour..."></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeEventModal()">Cancelar</button>
+          <button type="submit" class="btn-primary">Salvar Evento</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script>
-    lucide.createIcons();
-
-    let CURRENT_SESSION = null;
-    let KANBAN_CARDS = [];
-    let CURRENT_SELLER = 'all';
-
+    // ETAPAS OFICIAIS CANÔNICAS DA FESTBLEND CUIABÁ 360
     const STAGES = [
       { id: 'data_consultada', title: 'Data Consultada', color: '#c5a059' },
       { id: 'qualificacao', title: 'Qualificação', color: '#60a5fa' },
       { id: 'cardapio_degustacao', title: 'Degustação & Drinks', color: '#a78bfa' },
       { id: 'proposta_enviada', title: 'Proposta Enviada', color: '#f59e0b' },
-      { id: 'negociacao_reserva', title: 'Em Negociação', color: '#38bdf8' },
-      { id: 'contrato_fechado', title: 'Contrato Fechado', color: '#10b981' },
+      { id: 'sinal_pix_pago', title: 'Sinal 30% PIX Pago', color: '#10b981' },
+      { id: 'contrato_fechado', title: 'Contrato Fechado', color: '#059669' },
       { id: 'data_em_risco', title: 'Data em Risco', color: '#ef4444' },
       { id: 'perdido', title: 'Data Liberada', color: '#6b7280' }
     ];
 
-    document.addEventListener('DOMContentLoaded', async () => {
-      CURRENT_SESSION = checkFestblendAuth();
-      if (!CURRENT_SESSION) return;
+    const SELLER_MAP = {
+      'eduardo': { name: 'Carlos Eduardo', avatar: 'assets/carlos_eduardo.png' },
+      'carlos': { name: 'Carlos Eduardo', avatar: 'assets/carlos_eduardo.png' },
+      'anapaula': { name: 'Ana Paula Serra', avatar: 'assets/ana_paula.png' },
+      'ruben': { name: 'Ruben Ribeiro', avatar: 'assets/ruben_ribeiro.png' }
+    };
 
-      if (CURRENT_SESSION.role === 'admin') {
-        document.getElementById('masterSellerFilterKanban').style.display = 'flex';
-      } else {
-        CURRENT_SELLER = CURRENT_SESSION.id; // Vendedor vê apenas o dele
+    let RAW_CARDS = [];
+    let CURRENT_SELLER_FILTER = 'all';
+    let CURRENT_PERIOD_FILTER = 'all';
+    let CURRENT_SEARCH_TERM = '';
+    let DRAGGED_CARD_ID = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const session = checkFestblendAuth();
+      if (!session) return;
+
+      // Se for vendedor, travar na carteira dele a menos que seja admin
+      if (session.role !== 'admin') {
+        CURRENT_SELLER_FILTER = session.id;
+        const group = document.getElementById('sellerFilterGroup');
+        if (group) group.style.display = 'none';
       }
 
-      buildBoardColumns();
-      await loadCards();
+      buildColumns();
+      await fetchKanbanData();
+      lucide.createIcons();
     });
 
-    function filterKanbanBySeller(sellerId) {
-      if (CURRENT_SESSION.role !== 'admin') return;
-      CURRENT_SELLER = sellerId;
-      document.querySelectorAll('#masterSellerFilterKanban .seller-pill').forEach(b => b.classList.remove('active'));
-      const activeBtn = document.querySelector(`#masterSellerFilterKanban .seller-pill[onclick*="'${sellerId}'"]`);
-      if (activeBtn) activeBtn.classList.add('active');
-      renderCards();
-    }
-
-    function buildBoardColumns() {
-      const container = document.getElementById('boardContainer');
-      container.innerHTML = '';
+    function buildColumns() {
+      const board = document.getElementById('kanbanBoard');
+      board.innerHTML = '';
 
       STAGES.forEach(st => {
         const col = document.createElement('div');
@@ -327,24 +866,55 @@
         col.id = `col-${st.id}`;
 
         col.innerHTML = `
-          <div class="column-header">
-            <div class="col-title-group">
-              <div class="col-dot" style="background:${st.color};"></div>
-              <span class="col-title">${st.title}</span>
+          <div class="column-header-box">
+            <div class="column-title">
+              <span style="width:8px; height:8px; border-radius:50%; background:${st.color}; display:inline-block;"></span>
+              <span>${st.title}</span>
             </div>
-            <span class="col-counter" id="count-${st.id}">0</span>
+            <div class="column-badges-wrap">
+              <span class="column-count" id="count-${st.id}">0</span>
+              <span class="column-sum ${st.id === 'contrato_fechado' || st.id === 'sinal_pix_pago' ? 'sum-fechado' : ''}" id="sum-${st.id}">R$ 0</span>
+            </div>
           </div>
-          <div class="column-cards-list" id="list-${st.id}" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, '${st.id}')">
+          <div class="card-container" id="list-${st.id}" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, '${st.id}')">
           </div>
         `;
-        container.appendChild(col);
+        board.appendChild(col);
       });
     }
 
-    async function loadCards() {
-      const sql = "SELECT * FROM festblend_pipeline_cards ORDER BY updated_at DESC;";
-      KANBAN_CARDS = await queryD1(sql);
-      renderCards();
+    async function fetchKanbanData() {
+      try {
+        // Carregar cards do D1 aise-data
+        const sql = "SELECT * FROM festblend_pipeline_cards ORDER BY updated_at DESC;";
+        const data = await queryD1(sql);
+
+        if (data && data.length > 0) {
+          RAW_CARDS = data;
+        } else {
+          // Fallback: carregar diretamente de festblend_contacts
+          const sqlContacts = "SELECT phone, remote_jid, name, event_type, event_date, guest_count, deal_stage as stage, deal_value, down_payment, assigned_to, notes as observations, updated_at FROM festblend_contacts ORDER BY updated_at DESC;";
+          const contacts = await queryD1(sqlContacts);
+          RAW_CARDS = (contacts || []).map((c, idx) => ({
+            id: idx + 1,
+            phone: c.phone,
+            remote_jid: c.remote_jid,
+            client_name: c.name || c.phone,
+            event_type: c.event_type || 'Evento Festblend 360',
+            event_date: c.event_date,
+            guest_count: c.guest_count,
+            stage: c.stage === 'contato_extensao' ? 'data_consultada' : (c.stage || 'data_consultada'),
+            deal_value: c.deal_value || 0,
+            assigned_to: c.assigned_to || 'eduardo',
+            observations: c.observations,
+            updated_at: c.updated_at
+          }));
+        }
+
+        renderCards();
+      } catch (err) {
+        console.error('Erro ao carregar dados do Kanban:', err);
+      }
     }
 
     function renderCards() {
@@ -354,80 +924,180 @@
         if (list) list.innerHTML = '';
         const count = document.getElementById(`count-${st.id}`);
         if (count) count.textContent = '0';
+        const sumEl = document.getElementById(`sum-${st.id}`);
+        if (sumEl) sumEl.textContent = 'R$ 0';
       });
 
-      let filtered = [...KANBAN_CARDS];
-      if (CURRENT_SESSION.role !== 'admin') {
-        filtered = filtered.filter(c => c.assigned_to === CURRENT_SESSION.id);
-      } else if (CURRENT_SELLER !== 'all') {
-        filtered = filtered.filter(c => c.assigned_to === CURRENT_SELLER);
+      // Filtragem
+      let filtered = [...RAW_CARDS];
+
+      if (CURRENT_SELLER_FILTER !== 'all') {
+        filtered = filtered.filter(c => (c.assigned_to || 'eduardo') === CURRENT_SELLER_FILTER);
       }
 
+      if (CURRENT_SEARCH_TERM) {
+        const q = CURRENT_SEARCH_TERM.toLowerCase();
+        filtered = filtered.filter(c => 
+          (c.client_name && c.client_name.toLowerCase().includes(q)) ||
+          (c.phone && c.phone.includes(q)) ||
+          (c.event_type && c.event_type.toLowerCase().includes(q))
+        );
+      }
+
+      // Período
+      const now = new Date();
+      if (CURRENT_PERIOD_FILTER === 'today') {
+        const todayStr = now.toISOString().slice(0, 10);
+        filtered = filtered.filter(c => (c.updated_at || '').slice(0, 10) === todayStr);
+      } else if (CURRENT_PERIOD_FILTER === '7d') {
+        const limit = new Date(now.getTime() - 7 * 86400000).toISOString().slice(0, 10);
+        filtered = filtered.filter(c => (c.updated_at || '') >= limit);
+      } else if (CURRENT_PERIOD_FILTER === '30d') {
+        const limit = new Date(now.getTime() - 30 * 86400000).toISOString().slice(0, 10);
+        filtered = filtered.filter(c => (c.updated_at || '') >= limit);
+      }
+
+      // Métricas globais
       let totalNeg = 0;
+      let countNeg = 0;
       let totalClosed = 0;
+      let countClosed = 0;
       let totalGuests = 0;
+      let totalSinal = 0;
+      let countSinal = 0;
 
       const stageCounts = {};
-      STAGES.forEach(s => stageCounts[s.id] = 0);
+      const stageSums = {};
+      STAGES.forEach(s => {
+        stageCounts[s.id] = 0;
+        stageSums[s.id] = 0;
+      });
 
       filtered.forEach(card => {
-        stageCounts[card.stage] = (stageCounts[card.stage] || 0) + 1;
+        const stage = card.stage || 'data_consultada';
+        const val = parseFloat(card.deal_value) || 0;
+        const guests = parseInt(card.guest_count) || 0;
 
-        if (card.stage === 'contrato_fechado') {
-          totalClosed += (card.deal_value || 0);
-        } else if (card.stage !== 'perdido') {
-          totalNeg += (card.deal_value || 0);
+        stageCounts[stage] = (stageCounts[stage] || 0) + 1;
+        stageSums[stage] = (stageSums[stage] || 0) + val;
+
+        if (stage === 'contrato_fechado') {
+          totalClosed += val;
+          countClosed++;
+        } else if (stage === 'sinal_pix_pago') {
+          totalSinal += (val * 0.3); // 30% sinal PIX
+          totalClosed += val;
+          countSinal++;
+        } else if (stage !== 'perdido') {
+          totalNeg += val;
+          countNeg++;
         }
-        totalGuests += (card.guest_count || 0);
 
-        const targetList = document.getElementById(`list-${card.stage}`);
+        totalGuests += guests;
+
+        const targetList = document.getElementById(`list-${stage}`);
         if (targetList) {
-          const cardEl = document.createElement('div');
-          cardEl.className = 'event-card';
-          cardEl.draggable = true;
-          cardEl.id = `card-${card.id}`;
-          cardEl.ondragstart = (e) => handleDragStart(e, card.id);
-
-          const isRisk = card.stage === 'data_em_risco';
-          const badgeClass = isRisk ? 'badge-risk' : 'badge-gold';
-
-          cardEl.innerHTML = `
-            <div class="card-top-row">
-              <span class="card-client-name">${card.client_name || 'Evento'}</span>
-              <span class="${badgeClass}">${card.event_type || 'Casamento'}</span>
-            </div>
-            <div class="card-middle-info">
-              <span><strong>Data:</strong> ${card.event_date ? card.event_date.split('-').reverse().join('/') : 'A definir'}</span>
-              <span><strong>Convidados:</strong> ${card.guest_count || 0} pessoas</span>
-              <span>${card.observations ? card.observations.slice(0, 60) + '...' : ''}</span>
-            </div>
-            <div class="card-footer-row">
-              <span class="card-value">R$ ${(card.deal_value || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
-              <span class="card-seller-pill">
-                <i data-lucide="user" style="width:12px;height:12px;"></i>
-                ${card.assigned_to ? card.assigned_to.toUpperCase() : 'EDUARDO'}
-              </span>
-            </div>
-          `;
+          const cardEl = createCardElement(card);
           targetList.appendChild(cardEl);
         }
       });
 
-      // Atualizar contadores
+      // Atualizar contadores das colunas
       STAGES.forEach(st => {
-        const count = document.getElementById(`count-${st.id}`);
-        if (count) count.textContent = stageCounts[st.id] || 0;
+        const countEl = document.getElementById(`count-${st.id}`);
+        if (countEl) countEl.textContent = stageCounts[st.id] || 0;
+        const sumEl = document.getElementById(`sum-${st.id}`);
+        if (sumEl) {
+          const sumVal = stageSums[st.id] || 0;
+          sumEl.textContent = sumVal > 0 
+            ? `R$ ${sumVal.toLocaleString('pt-BR', { maximumFractionDigits: 0 })}` 
+            : 'R$ 0';
+        }
       });
 
-      document.getElementById('kStatTotalNegotiating').textContent = `R$ ${totalNeg.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
-      document.getElementById('kStatTotalClosed').textContent = `R$ ${totalClosed.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
-      document.getElementById('kStatTotalGuests').textContent = totalGuests.toLocaleString('pt-BR');
+      // Atualizar Top Metrics
+      document.getElementById('metricVolumeNeg').textContent = `R$ ${totalNeg.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+      document.getElementById('metricVolumeSub').textContent = `${countNeg} propostas em andamento`;
+
+      document.getElementById('metricContratosFechados').textContent = `R$ ${totalClosed.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+      document.getElementById('metricContratosSub').textContent = `${countClosed} eventos formalizados`;
+
+      document.getElementById('metricTotalConvidados').textContent = totalGuests.toLocaleString('pt-BR');
+      document.getElementById('metricConvidadosSub').textContent = `Média de ${filtered.length > 0 ? Math.round(totalGuests / filtered.length) : 0} por evento`;
+
+      document.getElementById('metricSinaisPix').textContent = `R$ ${totalSinal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+      document.getElementById('metricSinaisSub').textContent = `${countSinal} datas com sinal em caixa`;
 
       lucide.createIcons();
     }
 
-    let DRAGGED_CARD_ID = null;
+    function createCardElement(card) {
+      const el = document.createElement('div');
+      el.className = 'event-card';
+      el.draggable = true;
+      el.id = `card-${card.id}`;
 
+      el.addEventListener('dragstart', (e) => handleDragStart(e, card.id));
+      el.addEventListener('click', (e) => {
+        if (!e.target.closest('.card-action-btn')) {
+          openEditLeadModal(card);
+        }
+      });
+
+      const eventType = card.event_type || 'Evento Festblend 360';
+      let badgeClass = 'badge-geral';
+      const evLower = eventType.toLowerCase();
+      if (evLower.includes('casamento')) badgeClass = 'badge-casamento';
+      else if (evLower.includes('15')) badgeClass = 'badge-15anos';
+      else if (evLower.includes('formatura')) badgeClass = 'badge-formatura';
+      else if (evLower.includes('corporativo')) badgeClass = 'badge-corporativo';
+
+      const sellerKey = card.assigned_to || 'eduardo';
+      const seller = SELLER_MAP[sellerKey] || SELLER_MAP['eduardo'];
+      const val = parseFloat(card.deal_value) || 0;
+      const cleanPhone = (card.phone || '').replace(/\D/g, '');
+
+      el.innerHTML = `
+        <div class="card-header-row">
+          <span class="card-client-name" title="${card.client_name || card.phone}">${card.client_name || card.phone}</span>
+          <span class="card-event-badge ${badgeClass}">${eventType.split('·')[0].trim()}</span>
+        </div>
+
+        <div class="card-info-row">
+          <div class="card-info-item">
+            <i data-lucide="calendar" style="width: 12px; height: 12px; color: var(--gold-primary);"></i>
+            <span>${card.event_date ? formatDateBR(card.event_date) : 'Data a definir'}</span>
+          </div>
+          <div class="card-info-item">
+            <i data-lucide="users" style="width: 12px; height: 12px; color: var(--text-muted);"></i>
+            <span>${card.guest_count ? card.guest_count + ' convidados' : 'Convidados a definir'}</span>
+          </div>
+        </div>
+
+        <div class="card-footer-row">
+          <span class="card-deal-value">${val > 0 ? 'R$ ' + val.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : 'A orçar'}</span>
+          <div class="card-actions-group">
+            <img src="${seller.avatar}" class="card-seller-avatar" alt="${seller.name}" title="${seller.name}">
+            ${cleanPhone ? `
+              <a href="https://wa.me/${cleanPhone}" target="_blank" rel="noopener" class="card-action-btn" title="Conversar no WhatsApp">
+                <i data-lucide="message-circle" style="width: 12px; height: 12px; color: #10b981;"></i>
+              </a>
+            ` : ''}
+          </div>
+        </div>
+      `;
+
+      return el;
+    }
+
+    function formatDateBR(dateStr) {
+      if (!dateStr) return '';
+      const parts = dateStr.split('-');
+      if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
+      return dateStr;
+    }
+
+    // Drag & Drop
     function handleDragStart(e, cardId) {
       DRAGGED_CARD_ID = cardId;
       e.dataTransfer.setData('text/plain', cardId);
@@ -447,21 +1117,139 @@
       e.currentTarget.classList.remove('drag-over');
 
       if (!DRAGGED_CARD_ID) return;
-
-      const card = KANBAN_CARDS.find(c => c.id === DRAGGED_CARD_ID);
+      const card = RAW_CARDS.find(c => String(c.id) === String(DRAGGED_CARD_ID));
       if (!card || card.stage === targetStage) return;
 
       card.stage = targetStage;
       renderCards();
 
-      // Salvar movimentação no D1
-      const sql = "UPDATE festblend_pipeline_cards SET stage = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?;";
-      await queryD1(sql, [targetStage, DRAGGED_CARD_ID]);
+      // Persistir atualização no Cloudflare D1 aise-data
+      try {
+        const sql = "UPDATE festblend_pipeline_cards SET stage = ?, updated_at = datetime('now') WHERE id = ?;";
+        await queryD1(sql, [targetStage, card.id]);
 
-      if (card.phone) {
-        const sqlContact = "UPDATE festblend_contacts SET deal_stage = ?, updated_at = CURRENT_TIMESTAMP WHERE phone = ?;";
-        await queryD1(sqlContact, [targetStage, card.phone]);
+        if (card.phone) {
+          const sqlContact = "UPDATE festblend_contacts SET deal_stage = ?, updated_at = datetime('now') WHERE phone = ?;";
+          await queryD1(sqlContact, [targetStage, card.phone]);
+        }
+      } catch (err) {
+        console.warn('Erro ao persistir movimentação no D1:', err);
       }
+    }
+
+    // Filtros
+    function setSellerFilter(sellerId) {
+      CURRENT_SELLER_FILTER = sellerId;
+      document.querySelectorAll('.seller-pill-btn').forEach(b => b.classList.remove('active'));
+      const activeBtn = document.querySelector(`.seller-pill-btn[onclick*="'${sellerId}'"]`);
+      if (activeBtn) activeBtn.classList.add('active');
+      renderCards();
+    }
+
+    function setPeriodFilter(period) {
+      CURRENT_PERIOD_FILTER = period;
+      document.querySelectorAll('.date-pill-btn').forEach(b => b.classList.remove('active'));
+      const activeBtn = document.getElementById(`btn-period-${period}`);
+      if (activeBtn) activeBtn.classList.add('active');
+      renderCards();
+    }
+
+    function handleSearch(term) {
+      CURRENT_SEARCH_TERM = term.trim();
+      renderCards();
+    }
+
+    // Modal Handlers
+    function openNewLeadModal() {
+      document.getElementById('modalTitle').textContent = 'Cadastrar Novo Evento';
+      document.getElementById('leadForm').reset();
+      document.getElementById('formCardId').value = '';
+      document.getElementById('formCardPhone').value = '';
+      document.getElementById('eventModal').style.display = 'flex';
+    }
+
+    function openEditLeadModal(card) {
+      document.getElementById('modalTitle').textContent = 'Editar Detalhes do Evento';
+      document.getElementById('formCardId').value = card.id;
+      document.getElementById('formCardPhone').value = card.phone || '';
+      document.getElementById('formClientName').value = card.client_name || '';
+      document.getElementById('formPhone').value = card.phone || '';
+      document.getElementById('formEventType').value = card.event_type || 'Casamento';
+      document.getElementById('formEventDate').value = card.event_date || '';
+      document.getElementById('formGuestCount').value = card.guest_count || '';
+      document.getElementById('formDealValue').value = card.deal_value || '';
+      document.getElementById('formStage').value = card.stage || 'data_consultada';
+      document.getElementById('formAssignedTo').value = card.assigned_to || 'eduardo';
+      document.getElementById('formObservations').value = card.observations || '';
+      document.getElementById('eventModal').style.display = 'flex';
+    }
+
+    function closeEventModal() {
+      document.getElementById('eventModal').style.display = 'none';
+    }
+
+    function closeModalOnBackdrop(e) {
+      if (e.target.id === 'eventModal') closeEventModal();
+    }
+
+    async function handleSaveLead(e) {
+      e.preventDefault();
+      const id = document.getElementById('formCardId').value;
+      const clientName = document.getElementById('formClientName').value.trim();
+      const phone = document.getElementById('formPhone').value.trim();
+      const eventType = document.getElementById('formEventType').value;
+      const eventDate = document.getElementById('formEventDate').value;
+      const guestCount = parseInt(document.getElementById('formGuestCount').value) || null;
+      const dealValue = parseFloat(document.getElementById('formDealValue').value) || 0.0;
+      const stage = document.getElementById('formStage').value;
+      const assignedTo = document.getElementById('formAssignedTo').value;
+      const obs = document.getElementById('formObservations').value.trim();
+
+      if (id) {
+        // Atualização de card existente
+        const card = RAW_CARDS.find(c => String(c.id) === String(id));
+        if (card) {
+          card.client_name = clientName;
+          card.phone = phone;
+          card.event_type = eventType;
+          card.event_date = eventDate;
+          card.guest_count = guestCount;
+          card.deal_value = dealValue;
+          card.stage = stage;
+          card.assigned_to = assignedTo;
+          card.observations = obs;
+        }
+
+        const sql = `UPDATE festblend_pipeline_cards 
+                     SET client_name = ?, phone = ?, event_type = ?, event_date = ?, guest_count = ?, deal_value = ?, stage = ?, assigned_to = ?, observations = ?, updated_at = datetime('now')
+                     WHERE id = ?;`;
+        await queryD1(sql, [clientName, phone, eventType, eventDate, guestCount, dealValue, stage, assignedTo, obs, id]);
+
+        if (phone) {
+          const sqlContact = `UPDATE festblend_contacts 
+                              SET name = ?, event_type = ?, event_date = ?, guest_count = ?, deal_value = ?, deal_stage = ?, assigned_to = ?, notes = ?, updated_at = datetime('now')
+                              WHERE phone = ?;`;
+          await queryD1(sqlContact, [clientName, eventType, eventDate, guestCount, dealValue, stage, assignedTo, obs, phone]);
+        }
+      } else {
+        // Novo card
+        const sql = `INSERT INTO festblend_pipeline_cards 
+                     (client_name, phone, event_type, event_date, guest_count, deal_value, stage, assigned_to, observations)
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);`;
+        await queryD1(sql, [clientName, phone, eventType, eventDate, guestCount, dealValue, stage, assignedTo, obs]);
+
+        if (phone) {
+          const sqlContact = `INSERT OR REPLACE INTO festblend_contacts 
+                              (phone, name, event_type, event_date, guest_count, deal_value, deal_stage, assigned_to, notes)
+                              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);`;
+          await queryD1(sqlContact, [phone, clientName, eventType, eventDate, guestCount, dealValue, stage, assignedTo, obs]);
+        }
+
+        await fetchKanbanData();
+      }
+
+      closeEventModal();
+      renderCards();
     }
   </script>
 </body>

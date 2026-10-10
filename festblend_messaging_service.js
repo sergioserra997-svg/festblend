@@ -22,9 +22,9 @@ app.use(express.json({ limit: '50mb' }));
 
 const PORT = process.env.PORT || 4070;
 
-const CF_ACCOUNT = process.env.CF_ACCOUNT || '952c2920af5b8e5db656b378e7a80b53';
-const CF_TOKEN = process.env.CF_TOKEN || process.env.CLOUDFLARE_API_TOKEN || '';
-const DB_FESTBLEND = process.env.DB_FESTBLEND || '780cd440-a787-4e85-9e26-f642c3852c0e';
+const CF_ACCOUNT = process.env.CF_ACCOUNT || '0b7b820a7c1bbbf58d977a486e9c9bb8';
+const CF_TOKEN = process.env.CF_TOKEN || process.env.CLOUDFLARE_API_TOKEN || 'cfoat_T5FqralFSN7_U3cDTlZf6IUzuuIQRnU80izYudvE8v0.qEvPhPrdRsK2S0zXaTxaDQfox41wFIDE2_ucfTARmqc';
+const DB_FESTBLEND = process.env.DB_FESTBLEND || 'f693bf8d-a399-4189-a755-27a9b367515d';
 
 const EVO_URL = process.env.EVOLUTION_API_URL || 'http://127.0.0.1:8080';
 const EVO_KEY = process.env.EVOLUTION_API_KEY || '';
@@ -142,9 +142,21 @@ app.get('/health', (req, res) => {
         service: 'nexus-festblend-messaging',
         port: PORT,
         instance: 'fastblend',
-        database: 'festblend-db',
+        database: DB_FESTBLEND,
         timestamp: new Date().toISOString()
     });
+});
+
+// Endpoint Seguro de Consulta D1 para o Front-end
+app.post('/api/d1/query', async (req, res) => {
+    try {
+        const { sql, params } = req.body || {};
+        if (!sql) return res.status(400).json({ error: 'SQL query required' });
+        const results = await queryD1(sql, params || []);
+        res.json({ result: [{ results, success: true }] });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 // Endpoint de Webhook da Evolution API

@@ -1,0 +1,9 @@
+name = "festblend-crm"
+pages_build_output_dir = "src"
+compatibility_date = "2024-03-01"
+account_id = "0b7b820a7c1bbbf58d977a486e9c9bb8"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "aise-data"
+database_id = "f693bf8d-a399-4189-a755-27a9b367515d"
